@@ -30,6 +30,7 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
+RenderItem* s = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -58,7 +59,7 @@ void initPhysics(bool interactive)
 	 
 	PxShape* shShape = CreateShape(PxSphereGeometry(10),gMaterial);
 	PxTransform* spTransform = new PxTransform(PxVec3(0,0,0));
-	RenderItem* s = new RenderItem(shShape, spTransform, Vector4(0, 0, 1, 1));
+	s = new RenderItem(shShape, spTransform, Vector4(0, 0, 1, 1));
 	RegisterRenderItem(s);
 
 	}
@@ -91,6 +92,8 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
+
+	DeregisterRenderItem(s);
 	}
 
 // Function called when a key is pressed

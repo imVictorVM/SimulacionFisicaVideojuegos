@@ -10,10 +10,15 @@
 
 #include <iostream>
 
+#include "myVector3D.h"
+#include "AxisRenderer.h"
+
+
 std::string display_text = "This is a test";
 
 
 using namespace physx;
+using namespace std;
 
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
@@ -31,6 +36,12 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 RenderItem* s = nullptr;
+
+//EJES DE COORDENADAS
+AxisRenderer* axisRenderer = nullptr;
+
+
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -56,11 +67,16 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	 
+	 /*
 	PxShape* shShape = CreateShape(PxSphereGeometry(10),gMaterial);
 	PxTransform* spTransform = new PxTransform(PxVec3(0,0,0));
 	s = new RenderItem(shShape, spTransform, Vector4(0, 0, 1, 1));
 	RegisterRenderItem(s);
+	*/
+
+	axisRenderer = new AxisRenderer(gPhysics, gMaterial);
+	axisRenderer->createAxes(3.0f, 1.0f);
+
 
 	}
 
@@ -72,6 +88,8 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
+
+
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 }
@@ -81,6 +99,14 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
+
+	//COSAS QUE HE CREADO
+	if (axisRenderer != nullptr) {
+		delete axisRenderer;
+		axisRenderer = nullptr;
+	}
+
+
 
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
@@ -93,7 +119,7 @@ void cleanupPhysics(bool interactive)
 	
 	gFoundation->release();
 
-	DeregisterRenderItem(s);
+	//DeregisterRenderItem(s);
 	}
 
 // Function called when a key is pressed

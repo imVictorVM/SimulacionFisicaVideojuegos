@@ -10,6 +10,9 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="myVector3D.cpp" />
+    <ClCompile Include="AxisRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -21,6 +24,9 @@
     </ClInclude>
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="callbacks.hpp" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="myVector3D.h" />
+    <ClInclude Include="AxisRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

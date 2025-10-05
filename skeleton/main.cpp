@@ -13,6 +13,7 @@
 #include "myVector3D.h"
 #include "AxisRenderer.h"
 
+#include "Particle.h"
 
 std::string display_text = "This is a test";
 
@@ -40,7 +41,13 @@ RenderItem* s = nullptr;
 //EJES DE COORDENADAS
 AxisRenderer* axisRenderer = nullptr;
 
+//vector para poder guardar partículas y no tener problemas con los deregister
+vector<Particle*> prac1Particles;
 
+void createParticle(Vector3 pos, Vector3 vel, Vector3 acel = Vector3(0,0,0), double dmp = 0) {
+	Particle* part = new Particle(pos, vel, acel, dmp);
+	prac1Particles.push_back(part);
+}
 
 
 // Initialize physics engine
@@ -77,7 +84,9 @@ void initPhysics(bool interactive)
 	axisRenderer = new AxisRenderer(gPhysics, gMaterial);
 	axisRenderer->createAxes(3.0f, 1.0f);
 
-
+	
+	
+	
 	}
 
 
@@ -88,7 +97,12 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
+	for (auto p : prac1Particles) {
+		p->integrate(t);
+		Vector3 pos = p->getPos();
+		std::cout << "Pos: (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
 
+	}
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
@@ -106,7 +120,10 @@ void cleanupPhysics(bool interactive)
 		axisRenderer = nullptr;
 	}
 
-
+	for (auto p : prac1Particles) {
+		delete p;
+	}
+	prac1Particles.clear();
 
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
@@ -129,8 +146,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch(toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
+	case 'B':
+	{
+		Vector3 posicionInicial(0, 0, 0);      
+		Vector3 velocidadInicial(0, 12, 0);      
+		Vector3 aceleracion(0, -5, 0);          
+		double dmp = 0.95;                  
+
+		createParticle(posicionInicial, velocidadInicial, aceleracion, dmp);
+		break;
+	}
+		//case ' ':	break;
 	case ' ':
 	{
 		break;

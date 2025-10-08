@@ -13,6 +13,7 @@
 #include <iostream>
 
 #include "SceneManager.h"
+#include "PhysXManager.h"
 
 
 std::string display_text = "This is a test";
@@ -152,7 +153,7 @@ void initPhysics(bool interactive)
 //	createGround();
 //	createTarget();
 	
-
+	PhysXManager::getInstance().initialize(interactive);
 
 	sceneManager = new SceneManager();
 	sceneManager->initialize();
@@ -186,8 +187,10 @@ void stepPhysics(bool interactive, double t)
 		sceneManager->update(t);
 	}
 
-	gScene->simulate(t);
-	gScene->fetchResults(true);
+//	gScene->simulate(t);
+//	gScene->fetchResults(true);
+
+	PhysXManager::getInstance().step(t);
 }
 
 // Function to clean data
@@ -229,7 +232,7 @@ void cleanupPhysics(bool interactive)
 		sceneManager = nullptr;
 	}
 
-	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
+/*	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
 	// -----------------------------------------------------
@@ -241,6 +244,9 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 
 	//DeregisterRenderItem(s);
+	*/
+
+	PhysXManager::getInstance().cleanup();
 	}
 
 // Function called when a key is pressed

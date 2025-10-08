@@ -4,7 +4,7 @@
 
 #include "core.hpp"
 #include "RenderUtils.hpp"
-
+#include "PhysXManager.h"
 
 using namespace physx;
 
@@ -12,8 +12,8 @@ extern void initPhysics(bool interactive);
 extern void stepPhysics(bool interactive, double t);	
 extern void cleanupPhysics(bool interactive);
 extern void keyPress(unsigned char key, const PxTransform& camera);
-extern PxPhysics* gPhysics;
-extern PxMaterial* gMaterial;
+//extern PxPhysics* gPhysics;
+//extern PxMaterial* gMaterial;
 
 std::vector<const RenderItem*> gRenderItems;
 
@@ -179,9 +179,16 @@ Camera* GetCamera()
 
 PxShape* CreateShape(const PxGeometry& geo, const PxMaterial* mat)
 {
-	if (mat == nullptr)
+	/*if (mat == nullptr)
 		mat = gMaterial; // Default material
 
 	PxShape* shape = gPhysics->createShape(geo, *mat);
+	return shape;
+	*/
+
+	if (mat == nullptr)
+		mat = PhysXManager::getInstance().getMaterial();  // Default material
+
+	PxShape* shape = PhysXManager::getInstance().getPhysics()->createShape(geo, *mat);
 	return shape;
 }

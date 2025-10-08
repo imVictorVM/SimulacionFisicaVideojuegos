@@ -9,10 +9,12 @@ public:
     Particle(Vector3 Pos, Vector3 Vel, Vector3 Acel = Vector3(0, 0, 0), double dmp = 0.8);
     ~Particle();
 
-    void integrate(double t);
+    virtual void integrate(double t);
     Vector3 getPos();
 
-private:
+	virtual void setupVisual();
+
+protected:
 
 	Vector3 vel;
 	Vector3 acel;

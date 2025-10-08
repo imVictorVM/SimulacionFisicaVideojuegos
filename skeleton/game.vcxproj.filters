@@ -13,6 +13,13 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="myVector3D.cpp" />
     <ClCompile Include="AxisRenderer.cpp" />
+    <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CannonBall.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Scene0.cpp" />
+    <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -27,6 +34,13 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="myVector3D.h" />
     <ClInclude Include="AxisRenderer.h" />
+    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CannonBall.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Scene0.h" />
+    <ClInclude Include="Scene1.h" />
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -9,6 +9,15 @@ void Scene1::initialize() {
 
 }
 
+void Scene1::cleanup()
+{
+
+    for (auto p : projectiles) {
+        p->cleanup();
+    }
+    projectiles.clear();
+}
+
 void Scene1::handleKeyPress(unsigned char key) {
     switch (toupper(key)) {
     case 'B': // Crear bala
@@ -17,7 +26,15 @@ void Scene1::handleKeyPress(unsigned char key) {
         break;
     case 'C': // Crear bola de cañón
         createProjectile(2);
-        std::cout << "Bola de cañón creada" << std::endl;
+        std::cout << "Canon creada" << std::endl;
+        break;
+    case 'T': // Crear bola de tanque
+        createProjectile(3);
+        std::cout << "Tanque creada" << std::endl;
+        break;
+    case 'L': // Crear pistola laser
+        createProjectile(4);
+        std::cout << "Laser creada" << std::endl;
         break;
     case ' ': // Limpiar proyectiles
         for (auto p : projectiles) {
@@ -36,15 +53,21 @@ void Scene1::createProjectile(int type) {
     Projectile* projectile = nullptr;
 
     switch (type) {
-    case 1: // Bala
+    case 1: // Bullet
         projectile = new Bullet(startPos, direction * 80.0f);
         break;
-    case 2: // Bola de cañón
+    case 2: // CannonBall
         projectile = new CannonBall(startPos, direction * 40.0f);
+        break;
+    case 3: // TankShell
+        projectile = new TankBall(startPos, direction * 150.0f);
+        break;
+    case 4: // LaserPistol
+        projectile = new LaserPistol(startPos, direction * 250.0f);
         break;
     }
 
-    if (projectile) {
+    if (projectile != nullptr) {
         projectile->setupVisual();
         projectiles.push_back(projectile);
     }

@@ -2,7 +2,9 @@
 using namespace physx;
 
 Bullet::Bullet(Vector3 Pos, Vector3 Vel)
-    : Projectile(Pos, Vel, Vector3(0, -0.575, 0), 0.999, 0.17, 8.0) 
+    : Projectile(Pos, Vel,
+        0.002, 850.0,      //masa real (kg) y velocidad real (m/s)
+        0.999, 8.0)        //damping y tiempo de vida
 {
 }
 

@@ -2,7 +2,9 @@
 using namespace physx;
 
 CannonBall::CannonBall(Vector3 Pos, Vector3 Vel)
-    : Projectile(Pos, Vel, Vector3(0, -0.25, 0), 0.998, 78.125, 15.0)
+    : Projectile(Pos, Vel,
+        8.0, 400.0,        //masa real (kg) y velocidad real (m/s)
+        0.998, 15.0)       //damping y tiempo de vida
 {
 }
 

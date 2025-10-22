@@ -14,6 +14,8 @@ public:
 
 	virtual void setupVisual();
 
+	void cleanup();
+
 protected:
 
 	Vector3 vel;

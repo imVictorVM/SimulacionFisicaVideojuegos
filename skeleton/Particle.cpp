@@ -14,11 +14,7 @@ Particle::Particle(Vector3 p, Vector3 v, Vector3 a, double d)
 
 Particle::~Particle()
 {
-    if (renderItem != nullptr) {
-        DeregisterRenderItem(renderItem);
-        delete renderItem;
-    }
-    delete pose;
+    cleanup();
 }
 
 void Particle::integrate(double t)
@@ -49,4 +45,14 @@ void Particle::setupVisual()
         PxShape* shShape = CreateShape(PxSphereGeometry(1.0f));
         renderItem = new RenderItem(shShape, pose, Vector4(1, 0, 0, 1));
     }
+}
+
+void Particle::cleanup()
+{
+    if (renderItem != nullptr) {
+        DeregisterRenderItem(renderItem);
+        delete renderItem;
+    }
+    if(pose != nullptr)
+    delete pose;
 }

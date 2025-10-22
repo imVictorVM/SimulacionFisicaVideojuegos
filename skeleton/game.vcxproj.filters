@@ -20,7 +20,11 @@
     <ClCompile Include="Scene0.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="ParticleGenerator.cpp" />
+    <ClCompile Include="GaussianGenerator.cpp" />
+    <ClCompile Include="TankBall.cpp" />
+    <ClCompile Include="LaserPistol.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -42,7 +46,12 @@
     <ClInclude Include="Scene0.h" />
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ParticleGenerator.h" />
+    <ClInclude Include="GaussianGenerator.h" />
+    <ClInclude Include="TankBall.h" />
+    <ClInclude Include="LaserPistol.h" />
+    <ClInclude Include="DebugNew.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

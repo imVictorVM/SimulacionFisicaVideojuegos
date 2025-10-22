@@ -2,11 +2,11 @@
 #include <vector>
 #include "Particle.h"
 #include "Projectile.h"
-#include "PhysXManager.h"  
+
 
 class Scene {
 public:
-    Scene() : physXManager(PhysXManager::getInstance()) {}  
+    Scene() {};
     virtual ~Scene() { cleanup(); }
 
     virtual void initialize() = 0;
@@ -15,11 +15,9 @@ public:
     virtual void handleKeyPress(unsigned char key) = 0;
     virtual std::string getDescription() const = 0;
 
-    std::vector<Particle*>& getParticles() { return particles; }
+
     std::vector<Projectile*>& getProjectiles() { return projectiles; }
 
 protected:
-    std::vector<Particle*> particles;
     std::vector<Projectile*> projectiles;
-    PhysXManager& physXManager;  
 };

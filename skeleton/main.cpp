@@ -1,9 +1,9 @@
 
 
-#include <ctype.h>
-
 #include <PxPhysicsAPI.h>
 
+
+#include <ctype.h>
 #include <vector>
 
 #include "core.hpp"
@@ -11,9 +11,11 @@
 #include "callbacks.hpp"
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "SceneManager.h"
-#include "PhysXManager.h"
+
 
 
 std::string display_text = "This is a test";
@@ -22,7 +24,7 @@ std::string display_text = "This is a test";
 using namespace physx;
 using namespace std;
 
-/*
+
 
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
@@ -41,7 +43,7 @@ ContactReportCallback gContactReportCallback;
 
 RenderItem* s = nullptr;
 
-*/
+
 
 //EJES DE COORDENADAS
 //AxisRenderer* axisRenderer = nullptr;
@@ -118,7 +120,7 @@ void createTarget() {
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
-	/*
+	
 	PX_UNUSED(interactive);
 
 	gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gAllocator, gErrorCallback);
@@ -139,8 +141,8 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
-	*/
-	 /*
+	
+	/*
 	PxShape* shShape = CreateShape(PxSphereGeometry(10),gMaterial);
 	PxTransform* spTransform = new PxTransform(PxVec3(0,0,0));
 	s = new RenderItem(shShape, spTransform, Vector4(0, 0, 1, 1));
@@ -153,7 +155,6 @@ void initPhysics(bool interactive)
 //	createGround();
 //	createTarget();
 	
-	PhysXManager::getInstance().initialize(interactive);
 
 	sceneManager = new SceneManager();
 	sceneManager->initialize();
@@ -187,10 +188,12 @@ void stepPhysics(bool interactive, double t)
 		sceneManager->update(t);
 	}
 
-//	gScene->simulate(t);
-//	gScene->fetchResults(true);
+	gScene->simulate(t);
+	gScene->fetchResults(true);
 
-	PhysXManager::getInstance().step(t);
+
+	//IMPORTANTE PARA ELIMINAR RUIDO
+	std::this_thread::sleep_for(std::chrono::microseconds(10));
 }
 
 // Function to clean data
@@ -226,13 +229,15 @@ void cleanupPhysics(bool interactive)
 		delete target;
 	}
 	*/
+	
 
 	if (sceneManager != nullptr) {
 		delete sceneManager;
 		sceneManager = nullptr;
 	}
+	std::this_thread::sleep_for(std::chrono::microseconds(10));
 
-/*	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
+	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
 	// -----------------------------------------------------
@@ -244,9 +249,9 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 
 	//DeregisterRenderItem(s);
-	*/
+	
 
-	PhysXManager::getInstance().cleanup();
+	
 	}
 
 // Function called when a key is pressed
@@ -307,7 +312,10 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 
 int main(int, const char*const*)
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#ifdef _DEBUG
+
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
 #ifndef OFFLINE_EXECUTION 
 	extern void renderLoop();
 	renderLoop();
@@ -318,5 +326,6 @@ int main(int, const char*const*)
 		stepPhysics(false);
 	cleanupPhysics(false);
 #endif
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

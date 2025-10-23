@@ -22,6 +22,8 @@ void GaussianGenerator::setVelDeviation(const Vector3& deviation) {
 std::list<Particle*> GaussianGenerator::generateParticles() {
     std::list<Particle*> new_particles;
 
+    if (!is_active) return new_particles;
+
     for (int i = 0; i < num_particles_per_generation; ++i) {
         //1 clona la partícula modelo
         Particle* p = model_particle->clone();

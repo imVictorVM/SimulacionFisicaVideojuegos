@@ -18,6 +18,8 @@ public:
 	void setVelocity(const Vector3& vel);
 	void setLifetime(double life);
 
+	void setColor(const Vector4& color);
+
     Vector3 getPos();
 
 	virtual void setupVisual();
@@ -37,5 +39,7 @@ protected:
 	RenderItem* renderItem;
 	Vector3 prePos;
 	double dmp;
+
+	Vector4 color;
 };
 

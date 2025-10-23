@@ -25,6 +25,8 @@
     <ClCompile Include="GaussianGenerator.cpp" />
     <ClCompile Include="TankBall.cpp" />
     <ClCompile Include="LaserPistol.cpp" />
+    <ClCompile Include="UniformGenerator.cpp" />
+    <ClCompile Include="Scene2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -52,6 +54,8 @@
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="LaserPistol.h" />
     <ClInclude Include="DebugNew.h" />
+    <ClInclude Include="UniformGenerator.h" />
+    <ClInclude Include="Scene2.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

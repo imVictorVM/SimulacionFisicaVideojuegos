@@ -16,6 +16,10 @@ public:
     void setMeanVelocity(const Vector3& vel);
     void setNumParticles(int num);
 
+    void setActive(bool active);
+    bool isActive() const;
+    void toggleActive();
+
 protected:
     std::string name;
     Particle* model_particle; 
@@ -24,6 +28,8 @@ protected:
     Vector3 mean_vel;
 
     int num_particles_per_generation = 1;
+
+    bool is_active = true;
 
     std::mt19937 _mt;
     std::uniform_real_distribution<double> uniform_dist;

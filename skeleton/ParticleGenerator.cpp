@@ -32,3 +32,15 @@ void ParticleGenerator::setMeanVelocity(const Vector3& vel) {
 void ParticleGenerator::setNumParticles(int num) {
     num_particles_per_generation = num;
 }
+
+void ParticleGenerator::setActive(bool active) {
+    is_active = active;
+}
+
+bool ParticleGenerator::isActive() const {
+    return is_active;
+}
+
+void ParticleGenerator::toggleActive() {
+    is_active = !is_active;
+}

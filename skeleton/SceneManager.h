@@ -7,7 +7,8 @@ class SceneManager {
 public:
     enum SceneType {
         SCENE_0 = 0,
-        SCENE_1 = 1
+        SCENE_1 = 1,
+        SCENE_2 = 2
         // Puedes añadir más escenas aquí
     };
 

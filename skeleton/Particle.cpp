@@ -2,20 +2,37 @@
 #include <cmath>
 using namespace physx;
 
-
-Particle::Particle(Vector3 p, Vector3 v, Vector3 a, double d, double life) :
-    vel(v), acel(a), dmp(d), lifetime(life), renderItem(nullptr), color(1.0, 1.0, 1.0, 1.0)
+Particle::Particle(Vector3 p, Vector3 v, double mass, double d, double life) :
+    vel(v),
+    _mass(mass),
+    dmp(d),
+    lifetime(life),
+    renderItem(nullptr),
+    color(1.0, 1.0, 1.0, 1.0),
+    _force_accumulator(0.0)
 {
     pose = new PxTransform(p);
+
+    // Calcula el inverso de la masa. Si la masa es 0, se considera masa infinita.
+    if (_mass <= 0.0f) {
+        _inverse_mass = 0.0f;
+    }
+    else {
+        _inverse_mass = 1.0f / _mass;
+    }
 }
 
-
 Particle::Particle(const Particle& other) :
-    vel(other.vel), acel(other.acel), dmp(other.dmp),
-    lifetime(other.lifetime), renderItem(nullptr), color(other.color)
+    vel(other.vel),
+    _mass(other._mass),
+    _inverse_mass(other._inverse_mass),
+    dmp(other.dmp),
+    lifetime(other.lifetime),
+    color(other.color),
+    renderItem(nullptr),
+    _force_accumulator(0.0)
 {
     pose = new PxTransform(other.pose->p);
-    
 }
 
 Particle::~Particle()
@@ -23,39 +40,56 @@ Particle::~Particle()
     cleanup();
 }
 
-
 Particle& Particle::operator=(const Particle& other)
 {
     if (this == &other) return *this;
-
     vel = other.vel;
-    acel = other.acel;
+    _mass = other._mass;
+    _inverse_mass = other._inverse_mass;
     dmp = other.dmp;
     lifetime = other.lifetime;
-    *pose = *other.pose; 
-
+    color = other.color;
+    *pose = *other.pose;
     return *this;
 }
 
 void Particle::integrate(double t)
 {
-    // EULER EXPLICITO
-    // pose->p = pose->p + (t * vel);
-    // vel = vel + (t * acel);
+    // No integramos partículas con masa infinita.
+    if (_inverse_mass <= 0.0f) return;
 
-    // Euler semi-implícito
-    vel += acel * t;
+    Vector3 resulting_acel = _force_accumulator * _inverse_mass;
+
+    vel += resulting_acel * t;
     vel *= pow(dmp, t);
+
     pose->p += vel * t;
 
-    // VERLET 
-   // Vector3 newPos = 2.0f * pose->p - prePos + acel * (t * t);
-   // prePos = pose->p;
-   // pose->p = newPos;
+    clearForce();
 
     lifetime -= t;
 }
 
+void Particle::addForce(const Vector3& force)
+{
+    _force_accumulator += force;
+}
+
+void Particle::clearForce()
+{
+    _force_accumulator = Vector3(0.0);
+}
+
+// --- GETTERS ---
+double Particle::getMass() const
+{
+    return _mass;
+}
+
+double Particle::getInverseMass() const
+{
+    return _inverse_mass;
+}
 
 bool Particle::isAlive() const
 {
@@ -81,7 +115,7 @@ void Particle::setLifetime(double life) {
 
 void Particle::setColor(const Vector4& newColor)
 {
-    color = newColor;   
+    color = newColor;
     if (renderItem) {
         renderItem->color = color;
     }
@@ -95,7 +129,7 @@ Vector3 Particle::getPos()
 void Particle::setupVisual()
 {
     if (renderItem == nullptr) {
-        PxShape* shShape = CreateShape(PxSphereGeometry(0.1f));
+        PxShape* shShape = CreateShape(PxSphereGeometry(0.2f));
         renderItem = new RenderItem(shShape, pose, color);
     }
 }

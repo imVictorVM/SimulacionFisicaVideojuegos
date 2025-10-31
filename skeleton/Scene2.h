@@ -2,7 +2,7 @@
 #include "Scene.h"
 #include "ParticleSystem.h"
 #include "GaussianGenerator.h"
-#include "UniformGenerator.h"
+#include "UniformGenerator.h" 
 #include <vector>
 
 class Scene2 : public Scene {
@@ -21,9 +21,8 @@ private:
 
     GaussianGenerator* fountainGenerator;
     UniformGenerator* smokeGenerator;
-    GaussianGenerator* fireGenerator;
+    GaussianGenerator* sparksGenerator;
 
-    //para mover la cámara y que se vean mejor
     physx::PxVec3 original_cam_eye;
     physx::PxVec3 original_cam_dir;
 };

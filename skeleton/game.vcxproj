@@ -257,7 +257,6 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="CannonBall.cpp" />
-    <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="GaussianGenerator.cpp" />
     <ClCompile Include="GravityForceGenerator.cpp" />
     <ClCompile Include="LaserPistol.cpp" />

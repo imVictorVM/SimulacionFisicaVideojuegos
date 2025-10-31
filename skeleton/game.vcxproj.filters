@@ -27,7 +27,6 @@
     <ClCompile Include="LaserPistol.cpp" />
     <ClCompile Include="UniformGenerator.cpp" />
     <ClCompile Include="Scene2.cpp" />
-    <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="GravityForceGenerator.cpp" />
     <ClCompile Include="ParticleForceRegistry.cpp" />
   </ItemGroup>

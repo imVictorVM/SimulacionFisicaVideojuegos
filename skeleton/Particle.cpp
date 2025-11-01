@@ -13,7 +13,7 @@ Particle::Particle(Vector3 p, Vector3 v, double mass, double d, double life) :
 {
     pose = new PxTransform(p);
 
-    // Calcula el inverso de la masa. Si la masa es 0, se considera masa infinita.
+    //Calcula el inverso de la masa. Si la masa es 0, se considera masa infinita.
     if (_mass <= 0.0f) {
         _inverse_mass = 0.0f;
     }
@@ -55,20 +55,25 @@ Particle& Particle::operator=(const Particle& other)
 
 void Particle::integrate(double t)
 {
-    // No integramos partículas con masa infinita.
     if (_inverse_mass <= 0.0f) return;
 
+    //1 Calcula la aceleración a partir de F = m*a --> a = F/m
     Vector3 resulting_acel = _force_accumulator * _inverse_mass;
 
+    //2 Actualiza la velocidad (Euler semi-implícita).
     vel += resulting_acel * t;
     vel *= pow(dmp, t);
 
+    //3 Actualiza la posición.
     pose->p += vel * t;
 
+    //4 Limpia el acumulador para el siguiente fotograma.
     clearForce();
 
+    
     lifetime -= t;
 }
+
 
 void Particle::addForce(const Vector3& force)
 {
@@ -80,7 +85,7 @@ void Particle::clearForce()
     _force_accumulator = Vector3(0.0);
 }
 
-// --- GETTERS ---
+
 double Particle::getMass() const
 {
     return _mass;
@@ -89,6 +94,11 @@ double Particle::getMass() const
 double Particle::getInverseMass() const
 {
     return _inverse_mass;
+}
+
+Vector3 Particle::getVelocity() const
+{
+    return vel;
 }
 
 bool Particle::isAlive() const

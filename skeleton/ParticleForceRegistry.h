@@ -8,6 +8,10 @@ protected:
     struct ParticleForceRegistration {
         Particle* particle;
         ForceGenerator* fg;
+
+        bool operator==(const ParticleForceRegistration& other) const {
+            return particle == other.particle && fg == other.fg;
+        }
     };
 
     std::vector<ParticleForceRegistration> _registry;

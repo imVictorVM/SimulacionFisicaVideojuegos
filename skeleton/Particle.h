@@ -12,17 +12,18 @@ public:
 
     Particle& operator=(const Particle& other);
 
+   
     virtual void integrate(double t);
 
- 
     void addForce(const Vector3& force);
     void clearForce();
 
-
+    
     double getMass() const;
     double getInverseMass() const;
+    Vector3 getVelocity() const;
 
-  
+
     void setPosition(const Vector3& pos);
     void setVelocity(const Vector3& vel);
     void setLifetime(double life);
@@ -34,7 +35,6 @@ public:
     virtual Particle* clone() const;
 
 protected:
-
     Vector3 vel;
     double _mass;
     double _inverse_mass;

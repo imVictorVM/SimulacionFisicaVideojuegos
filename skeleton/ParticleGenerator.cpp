@@ -13,11 +13,15 @@ ParticleGenerator::ParticleGenerator(std::string name) :
 }
 
 ParticleGenerator::~ParticleGenerator() {
+    model_particle->cleanup();
     delete model_particle;
 }
 
 void ParticleGenerator::setParticleModel(Particle* model) {
-    if (model_particle) delete model_particle;
+    if (model_particle) {
+        model_particle->cleanup();
+        delete model_particle;
+    }
     model_particle = model;
 }
 

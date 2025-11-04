@@ -19,17 +19,14 @@ Scene4::~Scene4() {
 void Scene4::initialize() {
     std::cout << "Inicializando " << getDescription() << std::endl;
 
-    // 1. Crear el registro y el generador de gravedad
+    //Crear el registro y el generador de gravedad
     _force_registry = new ParticleForceRegistry();
     _gravity_generator = new GravityForceGenerator({ 0.0f, -9.8f, 0.0f });
 
-    // 2. Crear el generador de explosión
-    // VALORES CORREGIDOS:
-    // K = 1,000,000 (Mucho más potente)
-    // Centro = {0, 1, 0} (A nivel del suelo, para que empuje hacia arriba)
+    //Crear el generador de explosión
     _explosion_generator = new ExplosionForceGenerator(1000000.0f, 0.5f, 20.0f, { 0.0f, 1.0f, 0.0f });
 
-    // 3. Crear las partículas de prueba
+    //Crear las partículas de prueba
     createParticleBox();
 }
 
@@ -50,28 +47,20 @@ void Scene4::createParticleBox() {
 
             _particles.push_back(p);
 
-            // 4. Registrar CADA partícula
-
-            // LÍNEA CORREGIDA: Comentamos la gravedad para que floten
-            // _force_registry->add(p, _gravity_generator); 
-
-            // Registramos solo la explosión
             _force_registry->add(p, _explosion_generator);
         }
     }
 }
 
 void Scene4::update(double t) {
-    // 1. Aplicar todas las fuerzas registradas (Explosión si está activa)
+    //1 Aplicar todas las fuerzas registradas (Explosión si está activa)
     _force_registry->updateForces(t);
 
-    // 2. Integrar las partículas
+    //2 Integrar las partículas
     auto it = _particles.begin();
     while (it != _particles.end()) {
         Particle* p = *it;
         if (!p->isAlive()) {
-            // LÍNEA CORREGIDA: No es necesario quitar la gravedad si no la añadimos
-            // _force_registry->remove(p, _gravity_generator);
             _force_registry->remove(p, _explosion_generator);
             delete p;
             it = _particles.erase(it);
@@ -91,7 +80,7 @@ void Scene4::cleanup() {
 
     delete _force_registry;
     _force_registry = nullptr;
-    delete _gravity_generator; // Lo borramos aunque no se use
+    delete _gravity_generator;
     _gravity_generator = nullptr;
     delete _explosion_generator;
     _explosion_generator = nullptr;
@@ -102,7 +91,6 @@ void Scene4::handleKeyPress(unsigned char key) {
     case 'E': // Activar la explosión
     {
         _explosion_generator->trigger();
-        std::cout << "¡¡¡BOOOOOOM!!!" << std::endl;
         break;
     }
     }

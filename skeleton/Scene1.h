@@ -17,15 +17,13 @@ public:
     void update(double t) override;
     void cleanup() override;
     void handleKeyPress(unsigned char key) override;
-    std::string getDescription() const override { return "Escena 1: Proyectiles con Fuerzas"; }
+    std::string getDescription() const override { return "Escena 1: Proyectiles"; }
 
 private:
     void createProjectile(int type);
 
-    // Un vector para todos los proyectiles (partículas)
     std::vector<Projectile*> _projectiles;
 
-    // --- MEJORA: Un registro y MÚLTIPLES generadores de gravedad ---
     ParticleForceRegistry* _force_registry;
 
     GravityForceGenerator* _standard_gravity;

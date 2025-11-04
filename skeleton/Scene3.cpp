@@ -32,19 +32,19 @@ Scene3::~Scene3() {
 void Scene3::initialize() {
     std::cout << "Inicializando " << getDescription() << std::endl;
 
-    // --- Registro de fuerzas ---
+    //Registro de fuerzas
     _force_registry = new ParticleForceRegistry();
 
-    // --- Gravedad ---
+    //Gravedad
     _gravity_generator = new GravityForceGenerator({ 0.0f, -9.8f, 0.0f });
 
-    // --- Viento ---
+    //Viento
     _wind_generator = new WindForceGenerator({ 50.0f, 0.0f, 0.0f });
     Vector3 windMin = { -25.0f, 0.0f, 0.0f };
     Vector3 windMax = { -5.0f, 20.0f, 30.0f };
     _wind_generator->setWindArea(windMin, windMax);
 
-    // --- Torbellino ---
+    //Torbellino
     _whirlwind_generator = new WhirlwindForceGenerator(
         150.0f,                             // intensidad
         { 15.0f, 0.0f, 15.0f },             // centro
@@ -54,9 +54,9 @@ void Scene3::initialize() {
     Vector3 whirlMax = { 25.0f, 20.0f, 30.0f };
     _whirlwind_generator->setWindArea(whirlMin, whirlMax);
 
-    // --- Visualización de las zonas ---
-    createWindZoneVisual(windMin, windMax, { 0.2f, 0.5f, 1.0f, 0.3f });        // azul semitransparente
-    createWindZoneVisual(whirlMin, whirlMax, { 1.0f, 0.5f, 0.1f, 0.3f }, true); // naranja semitransparente
+    //Visualización de las zonas
+    createWindZoneVisual(windMin, windMax, { 0.2f, 0.5f, 1.0f, 0.3f }, false);
+    createWindZoneVisual(whirlMin, whirlMax, { 1.0f, 0.5f, 0.1f, 0.3f }, true);
 }
 
 void Scene3::createWindZoneVisual(const Vector3& min, const Vector3& max, const Vector4& color, bool isWhirlwind) {
@@ -134,39 +134,20 @@ void Scene3::handleKeyPress(unsigned char key) {
     case 'L': createProjectile(4); break;
 
     case ' ':
-        for (auto p : _projectiles) {
-            _force_registry->remove(p, _gravity_generator);
-            _force_registry->remove(p, _wind_generator);
-            _force_registry->remove(p, _whirlwind_generator);
-            delete p;
-        }
-        _projectiles.clear();
-        std::cout << "Escena 3 limpiada." << std::endl;
         break;
-
     default:
-        std::cout << "Tecla '" << key << "' ignorada en Scene3.\n";
         break;
     }
 }
 
 void Scene3::createProjectile(int type) {
+  
     Camera* cam = GetCamera();
-    if (!cam) {
-        std::cerr << "[ERROR] Cámara no disponible en Scene3::createProjectile\n";
-        return;
-    }
 
     Vector3 startPos = cam->getEye();
     Vector3 direction = cam->getDir();
 
-    if (!direction.isFinite()) {
-        std::cerr << "[WARN] Dirección no finita detectada. Reasignando dirección.\n";
-        direction = { 0.0f, -0.3f, -1.0f };
-    }
-    else {
-        direction.normalize();
-    }
+    
 
     Projectile* p = nullptr;
     switch (type) {

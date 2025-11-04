@@ -11,7 +11,6 @@ public:
         SCENE_2 = 2,
         SCENE_3 = 3,
         SCENE_4 = 4
-        // Puedes añadir más escenas aquí
     };
 
     SceneManager();

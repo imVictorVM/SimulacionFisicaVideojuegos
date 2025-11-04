@@ -81,13 +81,13 @@ void Scene2::cleanup() {
 
 void Scene2::handleKeyPress(unsigned char key) {
     switch (toupper(key)) {
-    case '1':
+    case 'F':
         if (fountainGenerator) fountainGenerator->toggleActive();
         break;
-    case '2':
+    case 'H':
         if (smokeGenerator) smokeGenerator->toggleActive();
         break;
-    case '3':
+    case 'C':
         if (sparksGenerator) sparksGenerator->toggleActive();
         break;
     }

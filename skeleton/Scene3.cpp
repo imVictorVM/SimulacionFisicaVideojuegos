@@ -1,18 +1,27 @@
-#include "Scene3.h"
-#include "Render/Camera.h"
+ï»¿#include "Scene3.h"
+#include "RenderUtils.hpp"
 #include "ParticleForceRegistry.h"
 #include "GravityForceGenerator.h"
 #include "WindForceGenerator.h"
 #include "WhirlwindForceGenerator.h"
+
+#include "Bullet.h"
+#include "CannonBall.h"
+#include "TankBall.h"
+#include "LaserPistol.h"
+
+
 #include <iostream>
-// NOTA: No necesitamos incluir "Bullet.h", etc. aquí
-// porque ya están incluidos en "Scene3.h"
+
+using namespace physx;
 
 Scene3::Scene3() :
     _force_registry(nullptr),
     _gravity_generator(nullptr),
     _wind_generator(nullptr),
-    _whirlwind_generator(nullptr)
+    _whirlwind_generator(nullptr),
+    _wind_area_visual(nullptr),
+    _whirlwind_area_visual(nullptr)
 {
 }
 
@@ -23,35 +32,52 @@ Scene3::~Scene3() {
 void Scene3::initialize() {
     std::cout << "Inicializando " << getDescription() << std::endl;
 
-    // --- ARREGLO DE CÁMARA ---
-    Camera* cam = GetCamera();
-    if (cam) {
-        _original_cam_eye = cam->getEye();
-        _original_cam_dir = cam->getDir();
-        cam->setEye({ 0.0f, 15.0f, 40.0f });
-        cam->setDir({ 0.0f, -0.3f, -1.0f });
-    }
-
-    // --- CREACIÓN DE FUERZAS ---
+    // --- Registro de fuerzas ---
     _force_registry = new ParticleForceRegistry();
 
-    // 1. Gravedad (afecta a todo)
+    // --- Gravedad ---
     _gravity_generator = new GravityForceGenerator({ 0.0f, -9.8f, 0.0f });
 
-    // 2. Zona de Viento (a la izquierda)
+    // --- Viento ---
     _wind_generator = new WindForceGenerator({ 50.0f, 0.0f, 0.0f });
-    _wind_generator->setWindArea({ -25.0f, 0.0f, 0.0f }, { -5.0f, 20.0f, 30.0f });
+    Vector3 windMin = { -25.0f, 0.0f, 0.0f };
+    Vector3 windMax = { -5.0f, 20.0f, 30.0f };
+    _wind_generator->setWindArea(windMin, windMax);
 
-    // 3. Zona de Torbellino (a la derecha)
-    _whirlwind_generator = new WhirlwindForceGenerator(150.0f, { 15.0f, 0.0f, 15.0f }, { 0.0f, 1.0f, 0.0f });
-    _whirlwind_generator->setWindArea({ 5.0f, 0.0f, 0.0f }, { 25.0f, 20.0f, 30.0f });
+    // --- Torbellino ---
+    _whirlwind_generator = new WhirlwindForceGenerator(
+        150.0f,                             // intensidad
+        { 15.0f, 0.0f, 15.0f },             // centro
+        { 0.0f, 1.0f, 0.0f }                // eje vertical
+    );
+    Vector3 whirlMin = { 5.0f, 0.0f, 0.0f };
+    Vector3 whirlMax = { 25.0f, 20.0f, 30.0f };
+    _whirlwind_generator->setWindArea(whirlMin, whirlMax);
+
+    // --- VisualizaciÃ³n de las zonas ---
+    createWindZoneVisual(windMin, windMax, { 0.2f, 0.5f, 1.0f, 0.3f });        // azul semitransparente
+    createWindZoneVisual(whirlMin, whirlMax, { 1.0f, 0.5f, 0.1f, 0.3f }, true); // naranja semitransparente
+}
+
+void Scene3::createWindZoneVisual(const Vector3& min, const Vector3& max, const Vector4& color, bool isWhirlwind) {
+    Vector3 center = (min + max) * 0.5f;
+    Vector3 halfSize = (max - min) * 0.5f;
+
+    PxShape* boxShape = CreateShape(PxBoxGeometry(halfSize.x, halfSize.y, halfSize.z));
+    PxTransform* transform = new PxTransform(center);
+
+    RenderItem* visual = new RenderItem(boxShape, transform, color);
+    RegisterRenderItem(visual);
+
+    if (isWhirlwind)
+        _whirlwind_area_visual = visual;
+    else
+        _wind_area_visual = visual;
 }
 
 void Scene3::update(double t) {
-    // 1. Aplicar todas las fuerzas
     _force_registry->updateForces(t);
 
-    // 2. Integrar y limpiar partículas/proyectiles
     auto it = _projectiles.begin();
     while (it != _projectiles.end()) {
         Projectile* p = *it;
@@ -70,13 +96,9 @@ void Scene3::update(double t) {
 }
 
 void Scene3::cleanup() {
-    Camera* cam = GetCamera();
-    if (cam) {
-        cam->setEye(_original_cam_eye);
-        cam->setDir(_original_cam_dir);
-    }
-
-    // --- Limpiar partículas ---
+    
+    if (!_force_registry) return;
+    // Eliminar proyectiles
     for (auto p : _projectiles) {
         _force_registry->remove(p, _gravity_generator);
         _force_registry->remove(p, _wind_generator);
@@ -85,25 +107,33 @@ void Scene3::cleanup() {
     }
     _projectiles.clear();
 
-    // --- Limpiar registro y generadores ---
-    delete _force_registry;
-    _force_registry = nullptr;
-    delete _gravity_generator;
-    _gravity_generator = nullptr;
-    delete _wind_generator;
-    _wind_generator = nullptr;
-    delete _whirlwind_generator;
-    _whirlwind_generator = nullptr;
+    // Eliminar visuales de zonas
+    if (_wind_area_visual) {
+        DeregisterRenderItem(_wind_area_visual);
+        delete _wind_area_visual;
+        _wind_area_visual = nullptr;
+    }
+    if (_whirlwind_area_visual) {
+        DeregisterRenderItem(_whirlwind_area_visual);
+        delete _whirlwind_area_visual;
+        _whirlwind_area_visual = nullptr;
+    }
+
+    // Eliminar generadores y registro
+    delete _force_registry; _force_registry = nullptr;
+    delete _gravity_generator; _gravity_generator = nullptr;
+    delete _wind_generator; _wind_generator = nullptr;
+    delete _whirlwind_generator; _whirlwind_generator = nullptr;
 }
 
-// --- handleKeyPress TOTALMENTE ACTUALIZADO ---
 void Scene3::handleKeyPress(unsigned char key) {
     switch (toupper(key)) {
-    case 'B': createProjectile(1); break; // Bullet
-    case 'C': createProjectile(2); break; // CannonBall
-    case 'T': createProjectile(3); break; // TankBall
-    case 'L': createProjectile(4); break; // LaserPistol
-    case ' ': // Tecla de espacio para limpiar la escena
+    case 'B': createProjectile(1); break;
+    case 'C': createProjectile(2); break;
+    case 'T': createProjectile(3); break;
+    case 'L': createProjectile(4); break;
+
+    case ' ':
         for (auto p : _projectiles) {
             _force_registry->remove(p, _gravity_generator);
             _force_registry->remove(p, _wind_generator);
@@ -113,16 +143,32 @@ void Scene3::handleKeyPress(unsigned char key) {
         _projectiles.clear();
         std::cout << "Escena 3 limpiada." << std::endl;
         break;
+
+    default:
+        std::cout << "Tecla '" << key << "' ignorada en Scene3.\n";
+        break;
     }
 }
 
-// --- createProjectile AÑADIDO (copiado de Scene1) ---
 void Scene3::createProjectile(int type) {
     Camera* cam = GetCamera();
+    if (!cam) {
+        std::cerr << "[ERROR] CÃ¡mara no disponible en Scene3::createProjectile\n";
+        return;
+    }
+
     Vector3 startPos = cam->getEye();
     Vector3 direction = cam->getDir();
-    Projectile* p = nullptr; // Usamos Projectile* ya que es la base común
 
+    if (!direction.isFinite()) {
+        std::cerr << "[WARN] DirecciÃ³n no finita detectada. Reasignando direcciÃ³n.\n";
+        direction = { 0.0f, -0.3f, -1.0f };
+    }
+    else {
+        direction.normalize();
+    }
+
+    Projectile* p = nullptr;
     switch (type) {
     case 1: p = new Bullet(startPos, direction * 80.0f); break;
     case 2: p = new CannonBall(startPos, direction * 40.0f); break;
@@ -132,10 +178,8 @@ void Scene3::createProjectile(int type) {
 
     if (p) {
         p->setupVisual();
-        _projectiles.push_back(p); // Lo añadimos a nuestro vector de Particle*
+        _projectiles.push_back(p);
 
-        // --- ¡LA PARTE MÁS IMPORTANTE! ---
-        // Registramos el nuevo proyectil en TODOS los generadores de fuerza
         _force_registry->add(p, _gravity_generator);
         _force_registry->add(p, _wind_generator);
         _force_registry->add(p, _whirlwind_generator);

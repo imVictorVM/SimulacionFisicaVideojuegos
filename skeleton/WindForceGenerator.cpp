@@ -46,8 +46,12 @@ void WindForceGenerator::updateForce(Particle* particle, double t)
 
     if (!isParticleInArea(particle)) return;
 
-
-    Vector3 relative_velocity = _wind_velocity - particle->getVelocity();
+    Vector3 windVel = _wind_velocity + Vector3(
+        sin(t * 0.5) * 2.0f,
+        cos(t * 0.7) * 1.0f,
+        0.0f
+    );
+    Vector3 relative_velocity = windVel - particle->getVelocity();
     Vector3 wind_force = relative_velocity * _k1;
 
     if (_k2 > 0) {
@@ -57,6 +61,8 @@ void WindForceGenerator::updateForce(Particle* particle, double t)
             wind_force += drag_force;
         }
     }
+
+
 
     particle->addForce(wind_force);
 }

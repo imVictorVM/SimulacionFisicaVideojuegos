@@ -22,9 +22,13 @@ public:
 private:
     void createProjectile(int type);
 
-
+    // Un vector para todos los proyectiles (partículas)
     std::vector<Projectile*> _projectiles;
 
+    // --- MEJORA: Un registro y MÚLTIPLES generadores de gravedad ---
     ParticleForceRegistry* _force_registry;
-    GravityForceGenerator* _gravity_generator;
+
+    GravityForceGenerator* _standard_gravity;
+    GravityForceGenerator* _bullet_gravity;
+
 };

@@ -20,7 +20,18 @@ void WhirlwindForceGenerator::updateForce(Particle* particle, double t)
 
     // 2. Aplicamos NUESTRA lógica de fuerza (torbellino)
     Vector3 particle_to_center = particle->getPos() - _center;
-    Vector3 force = _K * _direction.cross(particle_to_center);
+    float r = particle_to_center.magnitude();
+    if (r < 1e-6f) return; // evitar singularidad en el centro
+
+    Vector3 tangential = _direction.cross(particle_to_center.getNormalized());
+    Vector3 force = _K * r * tangential; // fuerza crece con la distancia
+
+    float maxForce = 500.0f;
+    if (force.magnitude() > maxForce)
+        force = force.getNormalized() * maxForce;
+
+    Vector3 radial = -particle_to_center.getNormalized();
+    force += radial * (_K * 0.2f); // pequeña succión hacia el centro
 
     particle->addForce(force);
 }

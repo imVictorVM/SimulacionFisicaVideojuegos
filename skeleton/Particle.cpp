@@ -10,7 +10,8 @@ Particle::Particle(Vector3 p, Vector3 v, double mass, double d, double life) :
     _lifetime((float)life),
     renderItem(nullptr),
     color(1.0f, 1.0f, 1.0f, 1.0f), 
-    _force_accumulator(0.0f)
+    _force_accumulator(0.0f),
+    _radius(0.2f)
 {
     pose = new PxTransform(p);
 
@@ -31,7 +32,8 @@ Particle::Particle(const Particle& other) :
     _lifetime(other._lifetime),
     color(other.color),
     renderItem(nullptr),
-    _force_accumulator(0.0f)
+    _force_accumulator(0.0f),
+    _radius(other._radius)
 {
     pose = new PxTransform(other.pose->p);
 }
@@ -115,6 +117,11 @@ Particle* Particle::clone() const
     return new Particle(*this);
 }
 
+Vector4 Particle::getColor() const
+{
+    return color;
+}
+
 
 void Particle::setPosition(const Vector3& pos) {
     if (pose) pose->p = pos;
@@ -136,6 +143,10 @@ void Particle::setColor(const Vector4& newColor)
     }
 }
 
+void Particle::setRadius(float r) {
+    _radius = r;
+}
+
 Vector3 Particle::getPos()
 {
     return pose->p;
@@ -144,7 +155,7 @@ Vector3 Particle::getPos()
 void Particle::setupVisual()
 {
     if (renderItem == nullptr) {
-        PxShape* shShape = CreateShape(PxSphereGeometry(0.2f));
+        PxShape* shShape = CreateShape(PxSphereGeometry(_radius));
         renderItem = new RenderItem(shShape, pose, color);
     }
 }

@@ -8,10 +8,11 @@ public:
     ParticleSystem();
     ~ParticleSystem();
 
-    void update(double t);
+    virtual std::list<Particle*> update(double t);
+
+    std::list<Particle*>& getParticles();
 
     void addGenerator(ParticleGenerator* generator);
-
 
     void cleanup();
 

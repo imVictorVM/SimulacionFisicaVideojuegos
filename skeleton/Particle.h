@@ -28,11 +28,15 @@ public:
     void setVelocity(const Vector3& vel);
     void setLifetime(double life);
     void setColor(const Vector4& color);
+    void setRadius(float r);
+
     Vector3 getPos();
     virtual void setupVisual();
     void cleanup();
     virtual bool isAlive() const;
     virtual Particle* clone() const;
+
+    virtual Vector4 getColor() const;
 
 protected:
     Vector3 vel;
@@ -43,6 +47,7 @@ protected:
     float _inverse_mass;
     float _dmp;
     float _lifetime;
+    float _radius;
 
     physx::PxTransform* pose;
     RenderItem* renderItem;

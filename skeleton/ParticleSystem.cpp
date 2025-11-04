@@ -11,30 +11,31 @@ void ParticleSystem::addGenerator(ParticleGenerator* generator) {
     _generators.push_back(generator);
 }
 
-void ParticleSystem::update(double t) {
-    //1 generación de nuevas partículas
+std::list<Particle*> ParticleSystem::update(double t) {
+    std::list<Particle*> newly_created_particles;
+
+    //1 Generación de nuevas partículas
     for (auto gen : _generators) {
-        std::list<Particle*> new_particles = gen->generateParticles();
-        for (auto p : new_particles) {
-            p->setupVisual(); 
+        std::list<Particle*> new_particles_from_gen = gen->generateParticles();
+        for (auto p : new_particles_from_gen) {
+            p->setupVisual();
             _particles.push_back(p);
+            newly_created_particles.push_back(p);
         }
     }
 
-    //2 mantenimiento de partículas existentes
-    auto it = _particles.begin();
-    while (it != _particles.end()) {
-        Particle* p = *it;
-
-        if (!p->isAlive()) {
-            delete p;
-            it = _particles.erase(it);
-        }
-        else {
+    //2 Mantenimiento de partículas existentes
+    for (auto p : _particles) {
+        if (p->isAlive()) {
             p->integrate(t);
-            ++it;
         }
     }
+
+    return newly_created_particles;
+}
+
+std::list<Particle*>& ParticleSystem::getParticles() {
+    return _particles;
 }
 
 void ParticleSystem::cleanup() {

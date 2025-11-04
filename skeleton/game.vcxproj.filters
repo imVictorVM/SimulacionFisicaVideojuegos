@@ -33,6 +33,7 @@
     <ClCompile Include="ExplosionForceGenerator.cpp" />
     <ClCompile Include="Scene4.cpp" />
     <ClCompile Include="WhirlwindForceGenerator.cpp" />
+    <ClCompile Include="Scene5.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="ExplosionForceGenerator.h" />
     <ClInclude Include="Scene4.h" />
     <ClInclude Include="WhirlwindForceGenerator.h" />
+    <ClInclude Include="Scene5.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

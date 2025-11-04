@@ -4,6 +4,7 @@
 #include "Scene2.h"
 #include "Scene3.h"
 #include "Scene4.h"
+#include "Scene5.h"
 #include <iostream>
 
 SceneManager::SceneManager()
@@ -50,6 +51,9 @@ void SceneManager::switchToScene(SceneType scene) {
         break;
     case SCENE_4:
         currentScene = std::make_unique<Scene4>();
+        break;
+    case SCENE_5:
+        currentScene = std::make_unique<Scene5>();
         break;
     }
 

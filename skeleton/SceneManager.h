@@ -9,7 +9,8 @@ public:
         SCENE_0 = 0,
         SCENE_1 = 1,
         SCENE_2 = 2,
-        SCENE_3 = 3
+        SCENE_3 = 3,
+        SCENE_4 = 4
         // Puedes añadir más escenas aquí
     };
 

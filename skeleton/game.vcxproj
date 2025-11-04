@@ -257,6 +257,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="CannonBall.cpp" />
+    <ClCompile Include="ExplosionForceGenerator.cpp" />
     <ClCompile Include="GaussianGenerator.cpp" />
     <ClCompile Include="GravityForceGenerator.cpp" />
     <ClCompile Include="LaserPistol.cpp" />
@@ -275,9 +276,11 @@
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="Scene2.cpp" />
     <ClCompile Include="Scene3.cpp" />
+    <ClCompile Include="Scene4.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TankBall.cpp" />
     <ClCompile Include="UniformGenerator.cpp" />
+    <ClCompile Include="WhirlwindForceGenerator.cpp" />
     <ClCompile Include="WindForceGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +290,7 @@
     <ClInclude Include="CannonBall.h" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="DebugNew.h" />
+    <ClInclude Include="ExplosionForceGenerator.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="GaussianGenerator.h" />
     <ClInclude Include="GravityForceGenerator.h" />
@@ -305,9 +309,11 @@
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="Scene2.h" />
     <ClInclude Include="Scene3.h" />
+    <ClInclude Include="Scene4.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="UniformGenerator.h" />
+    <ClInclude Include="WhirlwindForceGenerator.h" />
     <ClInclude Include="WindForceGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

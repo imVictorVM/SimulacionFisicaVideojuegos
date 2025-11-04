@@ -2,18 +2,18 @@
 #include <cmath>
 using namespace physx;
 
+
 Particle::Particle(Vector3 p, Vector3 v, double mass, double d, double life) :
     vel(v),
-    _mass(mass),
-    dmp(d),
-    lifetime(life),
+    _mass((float)mass),
+    _dmp((float)d),
+    _lifetime((float)life),
     renderItem(nullptr),
-    color(1.0, 1.0, 1.0, 1.0),
-    _force_accumulator(0.0)
+    color(1.0f, 1.0f, 1.0f, 1.0f), 
+    _force_accumulator(0.0f)
 {
     pose = new PxTransform(p);
 
-    //Calcula el inverso de la masa. Si la masa es 0, se considera masa infinita.
     if (_mass <= 0.0f) {
         _inverse_mass = 0.0f;
     }
@@ -22,15 +22,16 @@ Particle::Particle(Vector3 p, Vector3 v, double mass, double d, double life) :
     }
 }
 
+
 Particle::Particle(const Particle& other) :
     vel(other.vel),
     _mass(other._mass),
     _inverse_mass(other._inverse_mass),
-    dmp(other.dmp),
-    lifetime(other.lifetime),
+    _dmp(other._dmp),
+    _lifetime(other._lifetime),
     color(other.color),
     renderItem(nullptr),
-    _force_accumulator(0.0)
+    _force_accumulator(0.0f)
 {
     pose = new PxTransform(other.pose->p);
 }
@@ -46,34 +47,37 @@ Particle& Particle::operator=(const Particle& other)
     vel = other.vel;
     _mass = other._mass;
     _inverse_mass = other._inverse_mass;
-    dmp = other.dmp;
-    lifetime = other.lifetime;
+    _dmp = other._dmp;
+    _lifetime = other._lifetime;
     color = other.color;
     *pose = *other.pose;
     return *this;
 }
 
+
 void Particle::integrate(double t)
 {
-    if (_inverse_mass <= 0.0f) return;
+    float dt = (float)t;
 
-    //1 Calcula la aceleración a partir de F = m*a --> a = F/m
-    Vector3 resulting_acel = _force_accumulator * _inverse_mass;
+    //1 Calcular aceleración (solo si la masa es finita)
+    Vector3 resulting_acel(0.0f);
+    if (_inverse_mass > 0.0f) {
+        resulting_acel = _force_accumulator * _inverse_mass;
+    }
 
-    //2 Actualiza la velocidad (Euler semi-implícita).
-    vel += resulting_acel * t;
-    vel *= pow(dmp, t);
+    //2 Actualizar velocidad
+    vel += resulting_acel * dt;
+    vel *= std::pow(_dmp, dt); 
 
-    //3 Actualiza la posición.
-    pose->p += vel * t;
+    //3 Actualizar posición
+    pose->p += vel * dt;
 
-    //4 Limpia el acumulador para el siguiente fotograma.
+    //4 Limpiar fuerzas
     clearForce();
 
     
-    lifetime -= t;
+    _lifetime -= dt;
 }
-
 
 void Particle::addForce(const Vector3& force)
 {
@@ -82,18 +86,18 @@ void Particle::addForce(const Vector3& force)
 
 void Particle::clearForce()
 {
-    _force_accumulator = Vector3(0.0);
+    _force_accumulator = Vector3(0.0f);
 }
 
 
 double Particle::getMass() const
 {
-    return _mass;
+    return (double)_mass;
 }
 
 double Particle::getInverseMass() const
 {
-    return _inverse_mass;
+    return (double)_inverse_mass;
 }
 
 Vector3 Particle::getVelocity() const
@@ -103,13 +107,14 @@ Vector3 Particle::getVelocity() const
 
 bool Particle::isAlive() const
 {
-    return lifetime > 0.0;
+    return _lifetime > 0.0f;
 }
 
 Particle* Particle::clone() const
 {
     return new Particle(*this);
 }
+
 
 void Particle::setPosition(const Vector3& pos) {
     if (pose) pose->p = pos;
@@ -120,7 +125,7 @@ void Particle::setVelocity(const Vector3& v) {
 }
 
 void Particle::setLifetime(double life) {
-    lifetime = life;
+    _lifetime = (float)life;
 }
 
 void Particle::setColor(const Vector4& newColor)

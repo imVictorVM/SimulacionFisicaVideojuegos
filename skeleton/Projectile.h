@@ -8,10 +8,4 @@ public:
 
     virtual ~Projectile() {}
 
-    virtual void integrate(double t) override;
-
-    bool isAlive();
-
-protected:
-    double lifetime;
 };

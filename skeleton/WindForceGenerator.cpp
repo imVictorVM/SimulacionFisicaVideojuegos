@@ -23,21 +23,29 @@ void WindForceGenerator::setWindArea(const Vector3& corner1, const Vector3& corn
     _area_active = true;
 }
 
+bool WindForceGenerator::isParticleInArea(Particle* particle)
+{
+    // Si el área no está activa, actúa en todas partes
+    if (!_area_active) return true;
+
+    Vector3 pos = particle->getPos();
+    if (pos.x < _area_corner1.x || pos.x > _area_corner2.x ||
+        pos.y < _area_corner1.y || pos.y > _area_corner2.y ||
+        pos.z < _area_corner1.z || pos.z > _area_corner2.z)
+    {
+        return false; // Está fuera
+    }
+    return true; // Está dentro
+}
+
 void WindForceGenerator::updateForce(Particle* particle, double t)
 {
     if (particle->getInverseMass() == 0.0f) {
         return;
     }
 
-    if (_area_active) {
-        Vector3 pos = particle->getPos();
-        if (pos.x < _area_corner1.x || pos.x > _area_corner2.x ||
-            pos.y < _area_corner1.y || pos.y > _area_corner2.y ||
-            pos.z < _area_corner1.z || pos.z > _area_corner2.z)
-        {
-            return;
-        }
-    }
+    if (!isParticleInArea(particle)) return;
+
 
     Vector3 relative_velocity = _wind_velocity - particle->getVelocity();
     Vector3 wind_force = relative_velocity * _k1;

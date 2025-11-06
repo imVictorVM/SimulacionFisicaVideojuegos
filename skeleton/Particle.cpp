@@ -33,7 +33,8 @@ Particle::Particle(const Particle& other) :
     color(other.color),
     renderItem(nullptr),
     _force_accumulator(0.0f),
-    _radius(other._radius)
+    _radius(other._radius),
+    _type(other._type)
 {
     pose = new PxTransform(other.pose->p);
 }

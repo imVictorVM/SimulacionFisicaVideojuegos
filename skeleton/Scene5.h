@@ -41,6 +41,7 @@ private:
     GravityForceGenerator* _target_mover; // Fuerza que atrae los objetivos
     WindForceGenerator* _side_wind;       // Fuerza que desvía los objetivos
     ExplosionForceGenerator* _bomb;        // Fuerza que destruye objetivos
+    WindForceGenerator* _target_drag; //Fuerza que hace de drag
 
     // --- Lógica de Juego (Nuevo) ---
     int _score;

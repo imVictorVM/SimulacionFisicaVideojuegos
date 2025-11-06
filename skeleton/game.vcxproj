@@ -254,6 +254,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AxisRenderer.cpp" />
+    <ClCompile Include="BoxParticle.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="CannonBall.cpp" />
@@ -285,6 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AxisRenderer.h" />
+    <ClInclude Include="BoxParticle.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="CannonBall.h" />

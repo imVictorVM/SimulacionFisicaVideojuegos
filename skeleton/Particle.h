@@ -2,6 +2,7 @@
 #include <vector>
 #include "core.hpp"
 #include "RenderUtils.hpp"
+enum class TargetType { NONE, RED, BLUE };
 
 class Particle
 {
@@ -38,6 +39,9 @@ public:
 
     virtual Vector4 getColor() const;
 
+    void setTargetType(TargetType type) { _type = type; }
+    TargetType getTargetType() const { return _type; }
+
 protected:
     Vector3 vel;
     Vector3 _force_accumulator;
@@ -52,4 +56,6 @@ protected:
     physx::PxTransform* pose;
     RenderItem* renderItem;
     Vector4 color;
+
+    TargetType _type = TargetType::NONE;
 };

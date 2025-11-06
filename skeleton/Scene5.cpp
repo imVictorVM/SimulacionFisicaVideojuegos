@@ -22,7 +22,9 @@ Scene5::Scene5() :
     _score(0),
     _lives(3),
     _game_timer(0.0),
-    _next_difficulty_increase(20.0)
+    _next_difficulty_increase(20.0),
+    _bomb_timer(15.0),
+    _bomb_cooldown(15.0)
 {
 }
 
@@ -155,6 +157,10 @@ void Scene5::update(double t) {
             // Imprime en la consola el estado del viento
             std::cout << "Viento lateral: " << (_side_wind->isActive() ? "ON" : "OFF") << std::endl;
         }
+    }
+
+    if (_bomb_timer < _bomb_cooldown) {
+        _bomb_timer += t;
     }
 
     //2 REGISTRAR FUERZAS NUEVAS
@@ -317,8 +323,13 @@ void Scene5::handleKeyPress(unsigned char key) {
         createProjectile(2);
         break;
     case 'E': // Activar BOMBA
-        if (_bomb) {
+        if (_bomb && _bomb_timer >= _bomb_cooldown) {
+            std::cout << "¡BOMBA ACTIVADA!" << std::endl;
             _bomb->trigger();
+            _bomb_timer = 0.0;
+        }
+        else {
+            std::cout << "Bomba recargando... (" << static_cast<int>(_bomb_cooldown - _bomb_timer) << "s restantes)" << std::endl;
         }
         break;
     }

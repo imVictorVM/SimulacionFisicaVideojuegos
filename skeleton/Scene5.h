@@ -53,6 +53,9 @@ private:
     double _game_timer;
     double _next_difficulty_increase;
 
+    double _bomb_timer;
+    double _bomb_cooldown;
+
     // --- Cámara ---
     physx::PxVec3 _original_cam_eye;
     physx::PxVec3 _original_cam_dir;

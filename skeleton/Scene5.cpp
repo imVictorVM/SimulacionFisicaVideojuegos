@@ -2,8 +2,12 @@
 #include "Render/Camera.h"
 #include "Bullet.h" 
 #include <iostream>
+#include <sstream>
+#include <algorithm>
 #include "LaserPistol.h"
 #include "BoxParticle.h"
+
+extern std::string ui_text;
 
 Scene5::Scene5() :
     _force_registry(nullptr),
@@ -37,6 +41,8 @@ Scene5::~Scene5() {
 void Scene5::initialize() {
     std::cout << "Inicializando " << getDescription() << std::endl;
     std::cout << "Puntuacion: " << _score << " | Vidas: " << _lives << std::endl;
+
+    updateUIText();
 
     //0 Posicionar Cámara Fija
     Camera* cam = GetCamera();
@@ -220,29 +226,46 @@ void Scene5::update(double t) {
             Particle* t = *it_targ;
 
             //Solo comprobar colisiones con partículas vivas
-            if (p->isAlive() && t->isAlive()) {
-                float distance = (p->getPos() - t->getPos()).magnitude();
+            // 1. Obtener datos de la Esfera (Proyectil)
+            Vector3 sphereCenter = p->getPos();
+            float sphereRadius = p->getRadius();
 
-                float radius_sum = p->getRadius() + t->getRadius();
+            // 2. Obtener datos del Cubo (Objetivo)
+            Vector3 boxCenter = t->getPos();
+            float boxHalfSize = t->getRadius(); // Radio del BoxParticle es su "mitad de lado"
+            Vector3 boxMin = boxCenter - Vector3(boxHalfSize, boxHalfSize, boxHalfSize);
+            Vector3 boxMax = boxCenter + Vector3(boxHalfSize, boxHalfSize, boxHalfSize);
 
-                if (distance < radius_sum) {
-                    if (p->getTargetType() == t->getTargetType()) {
-                        _score += 10;
-                        std::cout << "HIT! Puntuacion: " << _score << std::endl;
-                    }
-                    else {
-                        _lives -= 1;
-                        std::cout << "COLOR INCORRECTO! Vidas: " << _lives << std::endl;
+            // 3. Encontrar el punto más cercano en el cubo al centro de la esfera
+            //    Usamos std::max y std::min para "clampear" la posición del centro de la esfera
+            //    a los límites del cubo.
+            float closestX = (std::max)(boxMin.x, (std::min)(sphereCenter.x, boxMax.x));
+            float closestY = (std::max)(boxMin.y, (std::min)(sphereCenter.y, boxMax.y));
+            float closestZ = (std::max)(boxMin.z, (std::min)(sphereCenter.z, boxMax.z));
 
-                         if(t->getTargetType() == TargetType::NONE)
-                            std::cout << "Color target: None" << std::endl;
-                         if (p->getTargetType() == TargetType::NONE)
-                            std::cout << "Color projectile: None" << std::endl;
-                    }
-                    p->setLifetime(0);
-                    t->setLifetime(0);
-                    break;
+            Vector3 closestPoint(closestX, closestY, closestZ);
+
+            // 4. Calcular la distancia (al cuadrado) desde el centro de la esfera a ESE punto
+            Vector3 vectorToCenter = sphereCenter - closestPoint;
+            float distanceSquared = vectorToCenter.magnitudeSquared();
+            float radiusSquared = sphereRadius * sphereRadius;
+
+            // 5. Comprobar la colisión
+            if (distanceSquared < radiusSquared) {
+                if (p->getTargetType() == t->getTargetType()) {
+                    _score += 10;
+                    std::cout << "HIT! Puntuacion: " << _score << std::endl;
                 }
+                else {
+                    _lives -= 1;
+                    std::cout << "COLOR INCORRECTO! Vidas: " << _lives << std::endl;
+                }
+
+                updateUIText();
+
+                p->setLifetime(0);
+                t->setLifetime(0);
+                break;
             }
             ++it_targ;
         }
@@ -259,6 +282,7 @@ void Scene5::update(double t) {
                 t->setLifetime(0);
                 _lives -= 1;
                 std::cout << "FALLO! Vidas: " << _lives << std::endl;
+                updateUIText();
             }
         }
 
@@ -280,6 +304,10 @@ void Scene5::update(double t) {
 
     //8 Lógica de Muerte
     if (_lives <= 0) {
+        std::stringstream ss;
+        ss << "GAME OVER\n"
+            << "Puntuacion Final: " << _score;
+        ui_text = ss.str();
         std::cout << "--- GAME OVER --- Puntuacion Final: " << _score << std::endl;
         cleanup();
     }
@@ -291,6 +319,10 @@ void Scene5::cleanup() {
     if (cam) {
         cam->setEye(_original_cam_eye);
         cam->setDir(_original_cam_dir);
+    }
+
+    if (_lives > 0) {
+        ui_text = "";
     }
 
     //Limpiar proyectiles
@@ -354,6 +386,14 @@ void Scene5::handleKeyPress(unsigned char key) {
         }
         break;
     }
+}
+
+void Scene5::updateUIText()
+{
+    std::stringstream ss;
+    ss << "Vidas: " << _lives << std::endl <<
+         "Puntuacion: " << _score << std::endl;
+    ui_text = ss.str();
 }
 
 void Scene5::createProjectile(int type) {

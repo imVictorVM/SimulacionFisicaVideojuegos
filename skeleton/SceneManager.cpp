@@ -8,6 +8,7 @@
 #include <iostream>
 
 extern std::string display_text;
+extern std::string ui_text;
 
 SceneManager::SceneManager()
     : currentSceneType(SCENE_0)
@@ -39,6 +40,7 @@ void SceneManager::switchToScene(SceneType scene) {
     currentSceneType = scene;
 
     display_text = "";
+    ui_text = "";
 
     switch (scene) {
     case SCENE_0:
@@ -59,7 +61,6 @@ void SceneManager::switchToScene(SceneType scene) {
     case SCENE_5:
         currentScene = std::make_unique<Scene5>();
         display_text = "+";
-        // --- FIN DEL CAMBIO ---
         break;
     }
 

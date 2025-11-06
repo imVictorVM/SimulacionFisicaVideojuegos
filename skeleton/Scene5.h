@@ -24,8 +24,12 @@ public:
     std::string getDescription() const override { return "Proyecto intermedio"; }
 
 private:
+
+    void updateUIText();
+
     // --- Lógica del Jugador (P1) ---
     void createProjectile(int type);
+
     std::list<Particle*> _projectiles;
     GravityForceGenerator* _projectile_gravity;
 

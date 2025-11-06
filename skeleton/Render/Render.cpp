@@ -229,6 +229,8 @@ void renderGeometry(const PxGeometryHolder& h, bool wireframe =false)
 	}
 }
 
+std::string ui_text = "";
+
 namespace Snippets
 {
 
@@ -301,13 +303,18 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 
 	glColor4f(0.4f, 0.4f, 0.4f, 1.0f);
 
-	// Display text
+	// Display crosshair text
 	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
 
 	int text_x = (window_width / 2) - 4;
 	int text_y = (window_height / 2) - 7;
 
 	drawText(display_text, text_x, text_y, window_width, window_height);
+
+	// Display UI text
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	drawText(ui_text, 10, window_height - 20, window_width, window_height);
 
 
 	assert(glGetError() == GL_NO_ERROR);
@@ -393,39 +400,47 @@ void finishRender()
 
 void drawText(const std::string& text, int x, int y, int width, int height)
 {
-	// 1. Desactivar funciones 3D que interfieren con el texto 2D
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 
-	// 2. Guardar la matriz de PROYECCIÓN (3D) y configurar la 2D
+
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix(); // <-- Guarda la perspectiva 3D
+	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0, width, 0, height, -5, 5); // <-- Configura la "cámara" 2D
+	glOrtho(0, width, 0, height, -5, 5);
 
-	// 3. Guardar la matriz de MODELVIEW (3D) y configurar la 2D
+
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix(); // <-- Guarda la posición de la cámara 3D
-	glLoadIdentity(); // <-- Resetea para dibujar en 2D
+	glPushMatrix();
+	glLoadIdentity();
 
-	// 4. Dibujar el texto
-	glRasterPos2i(x, y);
+
+	int line_height = 17;
+	int current_y = y;
+
+	glRasterPos2i(x, current_y);
+
 	int length = text.length();
 	for (int i = 0; i < length; i++) {
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
+		if (text[i] == '\n') {
+
+			current_y -= line_height;
+
+			glRasterPos2i(x, current_y);
+		}
+		else {
+
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
+		}
 	}
+	
+	glPopMatrix();
 
-	// 5. Restaurar la matriz de MODELVIEW (3D)
-	glPopMatrix(); // <-- Recupera la posición de la cámara 3D
-
-	// 6. Restaurar la matriz de PROYECCIÓN (3D)
 	glMatrixMode(GL_PROJECTION);
-	glPopMatrix(); // <-- Recupera la perspectiva 3D
+	glPopMatrix();
 
-	// 7. Volver al modo MODELVIEW para el resto del renderizado
 	glMatrixMode(GL_MODELVIEW);
 
-	// 8. Reactivar las funciones 3D
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
 }

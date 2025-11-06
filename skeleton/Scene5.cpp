@@ -30,7 +30,8 @@ Scene5::Scene5() :
     _bomb_timer(15.0),
     _bomb_cooldown(15.0),
     _shot_timer(0.25),
-    _shot_cooldown(0.25)
+    _shot_cooldown(0.25),
+    _combo_counter(0)
 {
 }
 
@@ -253,11 +254,13 @@ void Scene5::update(double t) {
             // 5. Comprobar la colisión
             if (distanceSquared < radiusSquared) {
                 if (p->getTargetType() == t->getTargetType()) {
-                    _score += 10;
-                    std::cout << "HIT! Puntuacion: " << _score << std::endl;
+                    _combo_counter++; // <-- AUMENTAR COMBO
+                    _score += (10 * _combo_counter); // Puntos base * combo
+                    std::cout << "HIT! Combo: " << _combo_counter << " | Puntuacion: " << _score << std::endl;
                 }
                 else {
                     _lives -= 1;
+                    _combo_counter = 0;
                     std::cout << "COLOR INCORRECTO! Vidas: " << _lives << std::endl;
                 }
 
@@ -281,6 +284,7 @@ void Scene5::update(double t) {
             if (t->getPos().z > 5.0f) {
                 t->setLifetime(0);
                 _lives -= 1;
+                _combo_counter = 0;
                 std::cout << "FALLO! Vidas: " << _lives << std::endl;
                 updateUIText();
             }
@@ -393,6 +397,9 @@ void Scene5::updateUIText()
     std::stringstream ss;
     ss << "Vidas: " << _lives << std::endl <<
          "Puntuacion: " << _score << std::endl;
+    if (_combo_counter > 1) {
+        ss << "Combo: x" << _combo_counter << std::endl;
+    }
     ui_text = ss.str();
 }
 

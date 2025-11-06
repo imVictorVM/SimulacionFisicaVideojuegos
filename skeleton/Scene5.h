@@ -63,6 +63,8 @@ private:
     double _shot_timer;
     double _shot_cooldown;
 
+    int _combo_counter;
+
     // --- Cámara ---
     physx::PxVec3 _original_cam_eye;
     physx::PxVec3 _original_cam_dir;

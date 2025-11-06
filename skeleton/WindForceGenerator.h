@@ -9,6 +9,10 @@ public:
 
     void setWindArea(const Vector3& corner1, const Vector3& corner2);
 
+    void setActive(bool active) { is_active = active; }
+    void toggleActive() { is_active = !is_active; }
+    bool isActive() const { return is_active; }
+
 protected:
     bool isParticleInArea(Particle* particle);
 
@@ -18,4 +22,6 @@ private:
 
     Vector3 _area_corner1, _area_corner2;
     bool _area_active;
+
+    bool is_active;
 };

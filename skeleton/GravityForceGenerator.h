@@ -10,6 +10,9 @@ public:
  
     virtual void updateForce(Particle* particle, double t) override;
 
+    void setGravity(const Vector3& gravity) { _gravity = gravity; }
+    Vector3 getGravity() const { return _gravity; }
+
 protected:
 
     Vector3 _gravity;

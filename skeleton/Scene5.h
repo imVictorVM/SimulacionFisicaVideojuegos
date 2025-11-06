@@ -43,9 +43,15 @@ private:
     ExplosionForceGenerator* _bomb;        // Fuerza que destruye objetivos
     WindForceGenerator* _target_drag; //Fuerza que hace de drag
 
-    // --- Lógica de Juego (Nuevo) ---
+    double _wind_timer;
+    double _wind_interval;
+
+    // --- Lógica de Juego ---
     int _score;
     int _lives;
+
+    double _game_timer;
+    double _next_difficulty_increase;
 
     // --- Cámara ---
     physx::PxVec3 _original_cam_eye;

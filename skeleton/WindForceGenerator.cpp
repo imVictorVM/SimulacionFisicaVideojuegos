@@ -6,7 +6,8 @@ WindForceGenerator::WindForceGenerator(const Vector3& wind_vel, float k1, float 
     _wind_velocity(wind_vel),
     _k1(k1),
     _k2(k2),
-    _area_active(false)
+    _area_active(false),
+    is_active(true)
 {
 }
 
@@ -40,6 +41,9 @@ bool WindForceGenerator::isParticleInArea(Particle* particle)
 
 void WindForceGenerator::updateForce(Particle* particle, double t)
 {
+
+    if (!is_active) return;
+
     if (particle->getInverseMass() == 0.0f) {
         return;
     }

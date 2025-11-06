@@ -17,8 +17,12 @@ Scene5::Scene5() :
     _target_drag(nullptr),
     _spawn_timer(0.0),
     _spawn_interval(2.0),
+    _wind_timer(0.0),
+    _wind_interval(5.0),
     _score(0),
-    _lives(3)
+    _lives(3),
+    _game_timer(0.0),
+    _next_difficulty_increase(20.0)
 {
 }
 
@@ -103,6 +107,28 @@ void Scene5::initialize() {
 void Scene5::update(double t) {
     if (!_force_registry || !_target_spawner) return;
 
+
+    //0 Lógica de Dificultad incremental
+    _game_timer += t;
+    if (_game_timer >= _next_difficulty_increase) {
+        //1 Establecer el siguiente nivel de dificultad
+        _next_difficulty_increase += 20.0; // Siguiente aumento en 20s
+
+        //2 Aumentar la velocidad de aparición
+        _spawn_interval = (std::max)(0.5, _spawn_interval * 0.9); // 10% más rápido
+
+        // 3. Aumentar la velocidad de los objetivos
+        if (_target_mover) {
+            Vector3 current_gravity = _target_mover->getGravity();
+            _target_mover->setGravity(current_gravity * 1.15f); // 15% más rápido
+        }
+
+        std::cout << "\n--- ¡DIFICULTAD AUMENTADA! ---" << std::endl;
+        std::cout << "Nuevo intervalo de spawn: " << _spawn_interval << "s" << std::endl;
+        std::cout << "Nueva fuerza de objetivo: " << _target_mover->getGravity().z << std::endl;
+    }
+
+
     //1 Lógica de Spawning
     _spawn_timer += t;
     std::list<Particle*> new_targets;
@@ -118,6 +144,16 @@ void Scene5::update(double t) {
             _red_spawner->setActive(true);
             new_targets = _target_spawner->update(0);
             _red_spawner->setActive(false);
+        }
+    }
+
+    _wind_timer += t;
+    if (_wind_timer >= _wind_interval) {
+        _wind_timer = 0.0;
+        if (_side_wind) {
+            _side_wind->toggleActive();
+            // Imprime en la consola el estado del viento
+            std::cout << "Viento lateral: " << (_side_wind->isActive() ? "ON" : "OFF") << std::endl;
         }
     }
 

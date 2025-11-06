@@ -4,7 +4,7 @@
 using namespace physx;
 
 AxisRenderer::AxisRenderer(PxPhysics* physics, PxMaterial* material)
-    : gPhysics(physics), gMaterial(material)
+    : gPhysics(physics), gMaterial(material), xTr(nullptr), yTr(nullptr), zTr(nullptr), orTr(nullptr)
 {
 }
 
@@ -25,10 +25,10 @@ void AxisRenderer::createAxes(float axisLength, float sphereRadius)
     myVector3D origen(0.0, 0.0, 0.0);       // Origen - Blanco
 
     // Crear las esferas para cada eje
-    createAxis(ejeX, Vector4(1.0f, 0.0f, 0.0f, 1.0f), sphereRadius); // Rojo
-    createAxis(ejeY, Vector4(0.0f, 1.0f, 0.0f, 1.0f), sphereRadius); // Verde
-    createAxis(ejeZ, Vector4(0.0f, 0.0f, 1.0f, 1.0f), sphereRadius); // Azul
-    createAxis(origen, Vector4(1.0f, 1.0f, 1.0f, 1.0f), sphereRadius * 0.5f); // Blanco (más pequeño)
+    createAxis(xTr, ejeX, Vector4(1.0f, 0.0f, 0.0f, 1.0f), sphereRadius); // Rojo
+    createAxis(yTr, ejeY, Vector4(0.0f, 1.0f, 0.0f, 1.0f), sphereRadius); // Verde
+    createAxis(zTr, ejeZ, Vector4(0.0f, 0.0f, 1.0f, 1.0f), sphereRadius); // Azul
+    createAxis(orTr, origen, Vector4(1.0f, 1.0f, 1.0f, 1.0f), sphereRadius * 0.5f); // Blanco (más pequeño)
 
     std::cout << "Ejes de coordenadas creados exitosamente!" << std::endl;
     std::cout << " - Eje X (Rojo): (" << ejeX.getX() << ", " << ejeX.getY() << ", " << ejeX.getZ() << ")" << std::endl;
@@ -36,16 +36,16 @@ void AxisRenderer::createAxes(float axisLength, float sphereRadius)
     std::cout << " - Eje Z (Azul): (" << ejeZ.getX() << ", " << ejeZ.getY() << ", " << ejeZ.getZ() << ")" << std::endl;
 }
 
-void AxisRenderer::createAxis(const myVector3D& position, const Vector4& color, float sphereRadius)
+void AxisRenderer::createAxis(physx::PxTransform* tr, const myVector3D& position, const Vector4& color, float sphereRadius)
 {
     // Crear forma física
     PxShape* shape = CreateShape(PxSphereGeometry(sphereRadius), gMaterial);
 
     // Crear transform con la posición
-    PxTransform* transform = new PxTransform(PxVec3((float)position.getX(), (float)position.getY(), (float)position.getZ()));
+    tr = new PxTransform(PxVec3((float)position.getX(), (float)position.getY(), (float)position.getZ()));
 
     // Crear RenderItem
-    RenderItem* item = new RenderItem(shape, transform, color);
+    RenderItem* item = new RenderItem(shape, tr, color);
     axisItems.push_back(item);
 }
 
@@ -56,4 +56,8 @@ void AxisRenderer::cleanup()
         delete item;
     }
     axisItems.clear();
+    if(xTr != nullptr) delete xTr;
+    if(yTr != nullptr) delete yTr;
+    if(zTr != nullptr) delete zTr;
+    if(orTr != nullptr) delete orTr;
 }

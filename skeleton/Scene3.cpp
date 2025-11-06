@@ -55,10 +55,10 @@ void Scene3::initialize() {
     _whirlwind_generator->setWindArea(whirlMin, whirlMax);
 
     //Visualización de las zonas
-    createWindZoneVisual(windMin, windMax, { 0.2f, 0.5f, 1.0f, 0.3f }, false);
-    createWindZoneVisual(whirlMin, whirlMax, { 1.0f, 0.5f, 0.1f, 0.3f }, true);
+  //  createWindZoneVisual(windMin, windMax, { 0.2f, 0.5f, 1.0f, 0.3f }, false);
+  //  createWindZoneVisual(whirlMin, whirlMax, { 1.0f, 0.5f, 0.1f, 0.3f }, true);
 }
-
+/*
 void Scene3::createWindZoneVisual(const Vector3& min, const Vector3& max, const Vector4& color, bool isWhirlwind) {
     Vector3 center = (min + max) * 0.5f;
     Vector3 halfSize = (max - min) * 0.5f;
@@ -74,7 +74,7 @@ void Scene3::createWindZoneVisual(const Vector3& min, const Vector3& max, const 
     else
         _wind_area_visual = visual;
 }
-
+*/
 void Scene3::update(double t) {
     _force_registry->updateForces(t);
 

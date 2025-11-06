@@ -18,6 +18,7 @@ void Scene0::initialize() {
 void Scene0::cleanup()
 {
     axisRenderer->cleanup();
+    delete axisRenderer;
 }
 
 void Scene0::handleKeyPress(unsigned char key) {

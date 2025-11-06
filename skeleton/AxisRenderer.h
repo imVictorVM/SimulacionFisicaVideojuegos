@@ -18,5 +18,10 @@ private:
     physx::PxMaterial* gMaterial;
     std::vector<RenderItem*> axisItems;
 
-    void createAxis(const myVector3D& position, const Vector4& color, float sphereRadius);
+    physx::PxTransform* xTr;
+    physx::PxTransform* yTr;
+    physx::PxTransform* zTr;
+    physx::PxTransform* orTr;
+
+    void createAxis(physx::PxTransform* tr, const myVector3D& position, const Vector4& color, float sphereRadius);
 };

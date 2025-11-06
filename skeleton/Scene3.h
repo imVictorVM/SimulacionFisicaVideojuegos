@@ -29,7 +29,7 @@ private:
         float angle;
     };
 
-    void createWindZoneVisual(const Vector3& min, const Vector3& max, const Vector4& color, bool isWhirlwind = false);
+   // void createWindZoneVisual(const Vector3& min, const Vector3& max, const Vector4& color, bool isWhirlwind = false);
 
     std::vector<Projectile*> _projectiles;
 

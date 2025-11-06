@@ -286,20 +286,29 @@ void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNe
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Display text
-	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
-	drawText(display_text, 0, 0);
-
 	// Setup camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, GLdouble(glutGet(GLUT_WINDOW_WIDTH)) / GLdouble(glutGet(GLUT_WINDOW_HEIGHT)), GLdouble(clipNear), GLdouble(clipFar));
+
+	int window_width = glutGet(GLUT_WINDOW_WIDTH);
+	int window_height = glutGet(GLUT_WINDOW_HEIGHT);
+
+	gluPerspective(60.0, GLdouble(window_width) / GLdouble(window_height), GLdouble(clipNear), GLdouble(clipFar));
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(GLdouble(cameraEye.x), GLdouble(cameraEye.y), GLdouble(cameraEye.z), GLdouble(cameraEye.x + cameraDir.x), GLdouble(cameraEye.y + cameraDir.y), GLdouble(cameraEye.z + cameraDir.z), 0.0, 1.0, 0.0);
 
 	glColor4f(0.4f, 0.4f, 0.4f, 1.0f);
+
+	// Display text
+	glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
+
+	int text_x = (window_width / 2) - 4;
+	int text_y = (window_height / 2) - 7;
+
+	drawText(display_text, text_x, text_y, window_width, window_height);
+
 
 	assert(glGetError() == GL_NO_ERROR);
 }
@@ -382,30 +391,44 @@ void finishRender()
 	glutSwapBuffers();
 }
 
-void drawText(const std::string& text, int x, int y)
+void drawText(const std::string& text, int x, int y, int width, int height)
 {
+	// 1. Desactivar funciones 3D que interfieren con el texto 2D
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+
+	// 2. Guardar la matriz de PROYECCIÓN (3D) y configurar la 2D
 	glMatrixMode(GL_PROJECTION);
-	double* matrix = new double[16];
-	glGetDoublev(GL_PROJECTION_MATRIX, matrix);
+	glPushMatrix(); // <-- Guarda la perspectiva 3D
 	glLoadIdentity();
-	glOrtho(0, 512, 0, 512, -5, 5);
+	glOrtho(0, width, 0, height, -5, 5); // <-- Configura la "cámara" 2D
+
+	// 3. Guardar la matriz de MODELVIEW (3D) y configurar la 2D
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glPushMatrix();
-	//glLoadIdentity();
+	glPushMatrix(); // <-- Guarda la posición de la cámara 3D
+	glLoadIdentity(); // <-- Resetea para dibujar en 2D
+
+	// 4. Dibujar el texto
 	glRasterPos2i(x, y);
-
 	int length = text.length();
-
 	for (int i = 0; i < length; i++) {
 		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
 	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixd(matrix);
-	glMatrixMode(GL_MODELVIEW);
-}
 
+	// 5. Restaurar la matriz de MODELVIEW (3D)
+	glPopMatrix(); // <-- Recupera la posición de la cámara 3D
+
+	// 6. Restaurar la matriz de PROYECCIÓN (3D)
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix(); // <-- Recupera la perspectiva 3D
+
+	// 7. Volver al modo MODELVIEW para el resto del renderizado
+	glMatrixMode(GL_MODELVIEW);
+
+	// 8. Reactivar las funciones 3D
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+}
 
 
 } //namespace Snippets

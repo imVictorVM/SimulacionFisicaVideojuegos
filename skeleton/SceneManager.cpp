@@ -7,6 +7,8 @@
 #include "Scene5.h"
 #include <iostream>
 
+extern std::string display_text;
+
 SceneManager::SceneManager()
     : currentSceneType(SCENE_0)
 {
@@ -36,6 +38,8 @@ void SceneManager::switchToScene(SceneType scene) {
     cleanupCurrentScene();
     currentSceneType = scene;
 
+    display_text = "";
+
     switch (scene) {
     case SCENE_0:
         currentScene = std::make_unique<Scene0>();
@@ -54,6 +58,8 @@ void SceneManager::switchToScene(SceneType scene) {
         break;
     case SCENE_5:
         currentScene = std::make_unique<Scene5>();
+        display_text = "+";
+        // --- FIN DEL CAMBIO ---
         break;
     }
 

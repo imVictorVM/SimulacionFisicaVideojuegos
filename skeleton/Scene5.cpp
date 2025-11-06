@@ -24,7 +24,9 @@ Scene5::Scene5() :
     _game_timer(0.0),
     _next_difficulty_increase(20.0),
     _bomb_timer(15.0),
-    _bomb_cooldown(15.0)
+    _bomb_cooldown(15.0),
+    _shot_timer(0.25),
+    _shot_cooldown(0.25)
 {
 }
 
@@ -125,6 +127,15 @@ void Scene5::update(double t) {
             _target_mover->setGravity(current_gravity * 1.15f); // 15% más rápido
         }
 
+        //4 Reducir el tamaño de los objetivos
+        if (_red_spawner) {
+            // Reduce el tamaño un 5%, con un mínimo de 0.5
+            _red_spawner->scaleModelParticleRadius(0.95f, 0.5f);
+        }
+        if (_blue_spawner) {
+            _blue_spawner->scaleModelParticleRadius(0.95f, 0.5f);
+        }
+
         std::cout << "\n--- ¡DIFICULTAD AUMENTADA! ---" << std::endl;
         std::cout << "Nuevo intervalo de spawn: " << _spawn_interval << "s" << std::endl;
         std::cout << "Nueva fuerza de objetivo: " << _target_mover->getGravity().z << std::endl;
@@ -159,8 +170,13 @@ void Scene5::update(double t) {
         }
     }
 
+    //Timers de cooldown de disparo y explosión
     if (_bomb_timer < _bomb_cooldown) {
         _bomb_timer += t;
+    }
+
+    if (_shot_timer < _shot_cooldown) {
+        _shot_timer += t;
     }
 
     //2 REGISTRAR FUERZAS NUEVAS
@@ -309,7 +325,6 @@ void Scene5::cleanup() {
     delete _target_drag;
     _target_drag = nullptr;
 
-    //Ponemos punteros de generadores a null (ya los borró el _target_spawner)
     _red_spawner = nullptr;
     _blue_spawner = nullptr;
 }
@@ -317,10 +332,16 @@ void Scene5::cleanup() {
 void Scene5::handleKeyPress(unsigned char key) {
     switch (toupper(key)) {
     case 'B': // Disparo AZUL
-        createProjectile(1);
+        if (_shot_timer >= _shot_cooldown) {
+            createProjectile(1);
+            _shot_timer = 0.0;
+        }
         break;
     case 'C': // Disparo ROJO
-        createProjectile(2);
+        if (_shot_timer >= _shot_cooldown) {
+            createProjectile(2);
+            _shot_timer = 0.0;
+        }
         break;
     case 'E': // Activar BOMBA
         if (_bomb && _bomb_timer >= _bomb_cooldown) {

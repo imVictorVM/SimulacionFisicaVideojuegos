@@ -20,6 +20,8 @@ public:
     bool isActive() const;
     void toggleActive();
 
+    virtual void scaleModelParticleRadius(float scale, float min_radius);
+
 protected:
     std::string name;
     Particle* model_particle; 

@@ -48,3 +48,13 @@ bool ParticleGenerator::isActive() const {
 void ParticleGenerator::toggleActive() {
     is_active = !is_active;
 }
+
+void ParticleGenerator::scaleModelParticleRadius(float scale, float min_radius)
+{
+    if (model_particle) {
+        float current_radius = model_particle->getRadius();
+        float new_radius = current_radius * scale;
+
+        model_particle->setRadius((std::max)(min_radius, new_radius));
+    }
+}

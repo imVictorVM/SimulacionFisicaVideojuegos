@@ -148,6 +148,11 @@ void Particle::setRadius(float r) {
     _radius = r;
 }
 
+float Particle::getRadius() const
+{
+    return _radius;
+}
+
 Vector3 Particle::getPos()
 {
     return pose->p;

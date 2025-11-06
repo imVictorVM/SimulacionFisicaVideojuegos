@@ -164,7 +164,10 @@ void Scene5::update(double t) {
             //Solo comprobar colisiones con partículas vivas
             if (p->isAlive() && t->isAlive()) {
                 float distance = (p->getPos() - t->getPos()).magnitude();
-                if (distance < 2.0f) {
+
+                float radius_sum = p->getRadius() + t->getRadius();
+
+                if (distance < radius_sum) {
                     if (p->getTargetType() == t->getTargetType()) {
                         _score += 10;
                         std::cout << "HIT! Puntuacion: " << _score << std::endl;
@@ -194,7 +197,7 @@ void Scene5::update(double t) {
 
         bool removed = false;
         if (t->isAlive()) {
-            if (t->getPos().z > 25.0f) {
+            if (t->getPos().z > 5.0f) {
                 t->setLifetime(0);
                 _lives -= 1;
                 std::cout << "FALLO! Vidas: " << _lives << std::endl;

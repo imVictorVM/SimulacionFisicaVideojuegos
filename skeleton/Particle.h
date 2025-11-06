@@ -30,6 +30,7 @@ public:
     void setLifetime(double life);
     void setColor(const Vector4& color);
     void setRadius(float r);
+    float getRadius() const;
 
     Vector3 getPos();
     virtual void setupVisual();

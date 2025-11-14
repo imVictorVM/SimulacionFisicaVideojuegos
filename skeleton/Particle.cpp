@@ -153,6 +153,22 @@ float Particle::getRadius() const
     return _radius;
 }
 
+void Particle::setMass(float mass)
+{
+    _mass = mass;
+    if (_mass <= 0.0f || _mass > 1e10) {
+        _inverse_mass = 0.0f;
+    }
+    else {
+        _inverse_mass = 1.0f / _mass;
+    }
+}
+
+float Particle::getMass()
+{
+    return _mass;
+}
+
 Vector3 Particle::getPos()
 {
     return pose->p;

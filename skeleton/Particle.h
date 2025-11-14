@@ -32,6 +32,9 @@ public:
     void setRadius(float r);
     float getRadius() const;
 
+    void setMass(float mass);
+    float getMass();
+
     Vector3 getPos();
     virtual void setupVisual();
     void cleanup();

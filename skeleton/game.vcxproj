@@ -262,7 +262,9 @@
     <ClCompile Include="CannonBall.cpp" />
     <ClCompile Include="ElasticForceGenerator.cpp" />
     <ClCompile Include="ExplosionForceGenerator.cpp" />
+    <ClCompile Include="ExplosionSolidForceGenerator.cpp" />
     <ClCompile Include="GaussianGenerator.cpp" />
+    <ClCompile Include="GaussianSolidGenerator.cpp" />
     <ClCompile Include="GravityForceGenerator.cpp" />
     <ClCompile Include="LaserPistol.cpp" />
     <ClCompile Include="main.cpp" />
@@ -275,6 +277,7 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Scene0.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="Scene2.cpp" />
@@ -282,7 +285,9 @@
     <ClCompile Include="Scene4.cpp" />
     <ClCompile Include="Scene5.cpp" />
     <ClCompile Include="Scene6.cpp" />
+    <ClCompile Include="Scene7.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SolidGenerator.cpp" />
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="TankBall.cpp" />
     <ClCompile Include="UniformGenerator.cpp" />
@@ -298,11 +303,12 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="CannonBall.h" />
     <ClInclude Include="core.hpp" />
-    <ClInclude Include="DebugNew.h" />
     <ClInclude Include="ElasticForceGenerator.h" />
     <ClInclude Include="ExplosionForceGenerator.h" />
+    <ClInclude Include="ExplosionSolidForceGenerator.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="GaussianGenerator.h" />
+    <ClInclude Include="GaussianSolidGenerator.h" />
     <ClInclude Include="GravityForceGenerator.h" />
     <ClInclude Include="LaserPistol.h" />
     <ClInclude Include="myVector3D.h" />
@@ -314,6 +320,8 @@
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="RigidBodyForceRegistry.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene0.h" />
     <ClInclude Include="Scene1.h" />
@@ -322,7 +330,10 @@
     <ClInclude Include="Scene4.h" />
     <ClInclude Include="Scene5.h" />
     <ClInclude Include="Scene6.h" />
+    <ClInclude Include="Scene7.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SolidForceGenerator.h" />
+    <ClInclude Include="SolidGenerator.h" />
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="UniformGenerator.h" />

@@ -12,7 +12,8 @@ public:
         SCENE_3 = 3,
         SCENE_4 = 4,
         SCENE_5 = 5,
-        SCENE_6 = 6
+        SCENE_6 = 6,
+        SCENE_7 = 7
     };
 
     SceneManager();

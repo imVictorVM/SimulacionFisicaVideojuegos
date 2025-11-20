@@ -6,6 +6,7 @@
 #include "Scene4.h"
 #include "Scene5.h"
 #include "Scene6.h"
+#include "Scene7.h"
 #include <iostream>
 
 extern std::string display_text;
@@ -65,6 +66,9 @@ void SceneManager::switchToScene(SceneType scene) {
         break;
     case SCENE_6:
         currentScene = std::make_unique<Scene6>();
+        break;
+    case SCENE_7:
+        currentScene = std::make_unique<Scene7>();
         break;
     }
 

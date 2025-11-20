@@ -40,6 +40,11 @@
     <ClCompile Include="ElasticForceGenerator.cpp" />
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
     <ClCompile Include="Scene6.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="SolidGenerator.cpp" />
+    <ClCompile Include="GaussianSolidGenerator.cpp" />
+    <ClCompile Include="ExplosionSolidForceGenerator.cpp" />
+    <ClCompile Include="Scene7.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -66,7 +71,6 @@
     <ClInclude Include="GaussianGenerator.h" />
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="LaserPistol.h" />
-    <ClInclude Include="DebugNew.h" />
     <ClInclude Include="UniformGenerator.h" />
     <ClInclude Include="Scene2.h" />
     <ClInclude Include="ForceGenerator.h" />
@@ -84,6 +88,13 @@
     <ClInclude Include="ElasticForceGenerator.h" />
     <ClInclude Include="BuoyancyForceGenerator.h" />
     <ClInclude Include="Scene6.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="SolidGenerator.h" />
+    <ClInclude Include="GaussianSolidGenerator.h" />
+    <ClInclude Include="SolidForceGenerator.h" />
+    <ClInclude Include="RigidBodyForceRegistry.h" />
+    <ClInclude Include="ExplosionSolidForceGenerator.h" />
+    <ClInclude Include="Scene7.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

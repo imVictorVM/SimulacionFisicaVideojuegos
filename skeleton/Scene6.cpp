@@ -45,7 +45,7 @@ void Scene6::initialize()
     _gravity = new GravityForceGenerator({ 0.0f, -9.8f, 0.0f });
 
     //1 Muelle Anclado
-    _anchored_particle = new Particle({ -15.0f, 10.0f, 0.0f }, { 0,0,0 }, 1.0, 0.9, 100.0);
+    _anchored_particle = new Particle({ -15.0f, 10.0f, 0.0f }, { 0,0,0 }, 10.0, 0.9, 100.0);
     _anchored_particle->setupVisual();
     _particles.push_back(_anchored_particle);
 
@@ -64,11 +64,11 @@ void Scene6::initialize()
     _particles.push_back(_p1_spring); _particles.push_back(_p2_spring);
 
     _spring = new SpringForceGenerator(_p2_spring, 50.0f, 5.0f);
-    _registry->add(_p1_spring, _gravity);
+  //  _registry->add(_p1_spring, _gravity);
     _registry->add(_p1_spring, _spring); //p1 es afectado por p2
 
     SpringForceGenerator* spring_inv = new SpringForceGenerator(_p1_spring, 50.0f, 5.0f);
-    _registry->add(_p2_spring, _gravity);
+   // _registry->add(_p2_spring, _gravity);
     _registry->add(_p2_spring, spring_inv); //p2 es afectado por p1
 
     //Goma elástica
@@ -78,16 +78,16 @@ void Scene6::initialize()
     _particles.push_back(_p1_elastic); _particles.push_back(_p2_elastic);
 
     _elastic = new ElasticForceGenerator(_p2_elastic, 50.0f, 5.0f);
-    _registry->add(_p1_elastic, _gravity);
+  //  _registry->add(_p1_elastic, _gravity);
     _registry->add(_p1_elastic, _elastic); //p1 es afectado por p2
 
     ElasticForceGenerator* elastic_inv = new ElasticForceGenerator(_p1_elastic, 50.0f, 5.0f);
-    _registry->add(_p2_elastic, _gravity);
+ //   _registry->add(_p2_elastic, _gravity);
     _registry->add(_p2_elastic, elastic_inv); //p2 es afectado por p1
 
 
     //3 Flotación
-    _buoyancy_box = new BoxParticle({ 15.0f, 5.0f, 0.0f }, { 0,0,0 }, _box_mass, 0.9, 100.0);
+    _buoyancy_box = new BoxParticle({ 15.0f, 5.0f, 0.0f }, { 0,0,0 }, _box_mass, 0.5, 100.0);
     _buoyancy_box->setRadius(_box_radius);
     _buoyancy_box->setColor({ 0.6f, 0.4f, 0.2f, 1.0f });
     _buoyancy_box->setupVisual();

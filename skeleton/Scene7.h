@@ -23,6 +23,8 @@ private:
     void createStaticObstacles();
     void spawnManualInertiaBox();
 
+    void shoot();
+
     RigidBodyForceRegistry* _rb_registry;
     GaussianSolidGenerator* _solid_generator;
     ExplosionSolidForceGenerator* _explosion;

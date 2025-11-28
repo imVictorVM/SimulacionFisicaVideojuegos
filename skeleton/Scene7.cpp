@@ -33,7 +33,7 @@ void Scene7::createStaticFloor()
 void Scene7::createStaticObstacles()
 {
     //Obstáculo 1: Rampa
-    PxTransform transform({ -10.0f, 5.0f, 0.0f }, PxQuat(PxPi / 6.0f, { 0,0,1 }));
+    PxTransform transform({ 0.0f, 5.0f, 0.0f }, PxQuat(PxPi / 6.0f, { 0,0,1 }));
     PxRigidStatic* ramp = gPhysics->createRigidStatic(transform);
     PxShape* shape = CreateShape(PxBoxGeometry(10.0f, 1.0f, 10.0f), _material);
     ramp->attachShape(*shape);
@@ -68,6 +68,36 @@ void Scene7::spawnManualInertiaBox()
         _solids.push_back(rb);
 }
 
+void Scene7::shoot()
+{
+    Camera* cam = GetCamera();
+    if (!cam) return;
+
+    Vector3 pos = cam->getEye();
+    Vector3 dir = cam->getDir();
+
+
+    float w = 4, h = 1, d = 1; //Dimensiones
+    float m = 10.0f; //Masa
+    Vector3 halfExtents(w / 2, h / 2, d / 2);
+
+    RigidBody* rb = new RigidBody(gPhysics, gScene, pos, PxBoxGeometry(halfExtents), _material, 20.0f);
+    rb->setVelocity(dir * 50);
+    rb->setColor({ 1.0f, 0.0f, 1.0f, 1.0f });
+
+    //Calcular tensor de inercia para un paralelepípedo
+    float Ixx = (1.0f / 12.0f) * m * (h * h + d * d);
+    float Iyy = (1.0f / 12.0f) * m * (w * w + d * d);
+    float Izz = (1.0f / 12.0f) * m * (w * w + h * h);
+
+    PxVec3 inertiaTensor(Ixx, Iyy, Izz);
+
+    rb->getActor()->setMass(m);
+    rb->getActor()->setMassSpaceInertiaTensor(inertiaTensor);
+
+    _solids.push_back(rb);
+}
+
 
 void Scene7::initialize()
 {
@@ -80,7 +110,7 @@ void Scene7::initialize()
 
     // Crear material
     // Fricción estática=0.5, Fricción dinámica=0.5, Rebote=0.6
-    _material = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+    _material = gPhysics->createMaterial(0.5f, 0.8f, 0.2f);
 
     //Crear suelo y obstáculos
     createStaticFloor();
@@ -97,7 +127,7 @@ void Scene7::initialize()
     _solid_generator->setActive(false);
 
     //Configurar generador de explosión
-    _explosion = new ExplosionSolidForceGenerator(10000.0, 0.5, 30.0, { -5, 5, -5 });
+    _explosion = new ExplosionSolidForceGenerator(10000.0, 0.5, 30.0, { 0, 10, 0 });
 }
 
 void Scene7::update(double t)
@@ -164,7 +194,7 @@ void Scene7::handleKeyPress(unsigned char key)
     switch (toupper(key))
     {
     case 'G':
-        if (_solid_generator) _solid_generator->setActive(true);
+        if (_solid_generator) _solid_generator->toggleActive();
         break;
     case 'H':
         spawnManualInertiaBox();
@@ -172,6 +202,10 @@ void Scene7::handleKeyPress(unsigned char key)
     case 'E':
         if (_explosion) _explosion->trigger();
             std::cout << "¡EXPLOSION!" << std::endl;
+        break;
+
+    case 'P':
+        shoot();
         break;
     }
 }

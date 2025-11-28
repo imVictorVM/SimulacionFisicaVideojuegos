@@ -12,11 +12,12 @@ std::list<RigidBody*> GaussianSolidGenerator::generateSolids()
 {
     std::list<RigidBody*> new_solids;
     if (!_is_active) return new_solids;
+    
 
     for (int i = 0; i < _num_per_generation; ++i)
     {
         //1 Crear el sólido
-        RigidBody* rb = new RigidBody(_gPhysics, _gScene, _mean_pos, PxBoxGeometry(_half_extents), _material, 15.0f);
+        RigidBody* rb = new RigidBody(_gPhysics, _gScene, _mean_pos, PxBoxGeometry(_half_extents), _material, 5.0f);
 
         //2 Calcular nueva velocidad
         Vector3 new_vel = _mean_vel;

@@ -10,7 +10,9 @@ Scene7::Scene7() :
     _rb_registry(nullptr),
     _solid_generator(nullptr),
     _explosion(nullptr),
-    _material(nullptr)
+    _material(nullptr),
+    _spawn_timer(0.0),
+    _spawn_interval(0.2)
 {
 }
 
@@ -77,13 +79,13 @@ void Scene7::shoot()
     Vector3 dir = cam->getDir();
 
 
-    float w = 4, h = 1, d = 1; //Dimensiones
+    float w = 1, h = 1, d = 1; //Dimensiones
     float m = 10.0f; //Masa
     Vector3 halfExtents(w / 2, h / 2, d / 2);
 
     RigidBody* rb = new RigidBody(gPhysics, gScene, pos, PxBoxGeometry(halfExtents), _material, 20.0f);
     rb->setVelocity(dir * 50);
-    rb->setColor({ 1.0f, 0.0f, 1.0f, 1.0f });
+    rb->setColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 
     //Calcular tensor de inercia para un paralelepípedo
     float Ixx = (1.0f / 12.0f) * m * (h * h + d * d);
@@ -119,33 +121,45 @@ void Scene7::initialize()
     //Configurar generador de sólidos
     _solid_generator = new GaussianSolidGenerator("Cajas", gPhysics, gScene);
     _solid_generator->setMeanPosition({ 0, 20, 0 });
-    _solid_generator->setMeanVelocity({ 0, 0, -5 });
-    _solid_generator->setVelDeviation({ 3, 0, 10 });
-    _solid_generator->setBoxHalfExtents({ 0.5f, 1.0f, 0.5f });
+    _solid_generator->setMeanVelocity({ 0, 0, 0 });
+    _solid_generator->setVelDeviation({ 2, 0, 2 });
+    _solid_generator->setBoxHalfExtents({ 0.5f, 0.5f, 0.5f });
     _solid_generator->setMaterial(_material);
-    _solid_generator->setNumObjects(5);
+    _solid_generator->setNumObjects(1);
     _solid_generator->setActive(false);
 
     //Configurar generador de explosión
-    _explosion = new ExplosionSolidForceGenerator(10000.0, 0.5, 30.0, { 0, 10, 0 });
+    _explosion = new ExplosionSolidForceGenerator(20000.0, 0.5, 50.0, { 0, 10, 0 });
 }
 
 void Scene7::update(double t)
 {
     if (!_rb_registry) return;
 
+   
+
     //1 Generar nuevos sólidos
     if (_solid_generator) {
-        auto new_solids = _solid_generator->generateSolids();
-        for (auto s : new_solids) {
-            _solids.push_back(s);
-            //Registrar los nuevos sólidos con la explosión
-            _rb_registry->add(s, _explosion);
+        _spawn_timer += t;
+        // Solo generamos si ha pasado el tiempo suficiente
+        if (_spawn_timer >= _spawn_interval) {
+            _spawn_timer = 0.0;
+
+            auto new_solids = _solid_generator->generateSolids();
+            for (auto s : new_solids) {
+                _solids.push_back(s);
+                _rb_registry->add(s, _explosion);
+            }
         }
     }
 
     //2 Actualizar fuerzas
     _rb_registry->updateForces(t);
+
+    //Actualizar tiempo explosión
+    if (_explosion) {
+        _explosion->update(t);
+    }
 
     //3 Integrar y limpiar sólidos
     auto it = _solids.begin();

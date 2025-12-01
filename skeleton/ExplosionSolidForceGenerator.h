@@ -8,6 +8,8 @@ public:
 
     virtual void updateForce(RigidBody* solid, float t) override;
 
+    void update(double t);
+
     void trigger() {
         _is_active = true;
         _time_elapsed = 0.0;

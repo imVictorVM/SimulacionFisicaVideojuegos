@@ -11,17 +11,21 @@ ExplosionSolidForceGenerator::ExplosionSolidForceGenerator(double k, double t_co
 {
 }
 
-void ExplosionSolidForceGenerator::updateForce(RigidBody* solid, float t)
+void ExplosionSolidForceGenerator::update(double t)
 {
     if (!_is_active) return;
 
-    //Actualizamos el tiempo global de la explosión (solo si está activo)
-    if (_time_elapsed == 0.0) _time_elapsed += t;
+    //Actualizamos el tiempo global de la explosión 
+    _time_elapsed += t;
 
-    if (_time_elapsed > (4 * _T)) {
+    if (_time_elapsed > (0.25 * _T)) {
         _is_active = false;
-        return;
     }
+}
+
+void ExplosionSolidForceGenerator::updateForce(RigidBody* solid, float t)
+{
+    if (!_is_active) return;
 
     Vector3 solidPos = solid->getActor()->getGlobalPose().p;
     Vector3 direction = solidPos - _center;
@@ -34,10 +38,11 @@ void ExplosionSolidForceGenerator::updateForce(RigidBody* solid, float t)
         double decay = std::exp(-_time_elapsed / _T);
         Vector3 force = direction.getNormalized() * force_magnitude * decay;
 
-
+        solid->addForce(force);
         //Aplicamos la fuerza en la posición global del objeto,
         //que NO es su centro de masas si el objeto está rotando.
         //Esto generará torque.
-        solid->addForceAtPoint(force, solidPos);
+        Vector3 torquePoint = solidPos + Vector3(0.5f, 0.5f, 0.5f);
+        solid->addForceAtPoint(force * 0.5f, torquePoint);
     }
 }

@@ -33,5 +33,9 @@ private:
     std::vector<RenderItem*> _static_visuals; //Para limpiar los estáticos
     std::vector<PxRigidStatic*> _static_actors; //Para limpiar los estáticos
 
-    PxMaterial* _material;// Material para fricción y rebote
+    PxMaterial* _material;//Material para fricción y rebote
+
+    //Timers para que no se llene la escena de sólidos
+    double _spawn_timer;
+    double _spawn_interval;
 };

@@ -45,6 +45,7 @@
     <ClCompile Include="GaussianSolidGenerator.cpp" />
     <ClCompile Include="ExplosionSolidForceGenerator.cpp" />
     <ClCompile Include="Scene7.cpp" />
+    <ClCompile Include="Scene8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="RigidBodyForceRegistry.h" />
     <ClInclude Include="ExplosionSolidForceGenerator.h" />
     <ClInclude Include="Scene7.h" />
+    <ClInclude Include="Scene8.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

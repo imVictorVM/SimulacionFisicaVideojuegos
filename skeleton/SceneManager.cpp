@@ -7,13 +7,14 @@
 #include "Scene5.h"
 #include "Scene6.h"
 #include "Scene7.h"
+#include "Scene8.h"
 #include <iostream>
 
 extern std::string display_text;
 extern std::string ui_text;
 
 SceneManager::SceneManager()
-    : currentSceneType(SCENE_0)
+    : currentSceneType(SCENE_8)
 {
 }
 
@@ -23,7 +24,7 @@ SceneManager::~SceneManager() {
 
 void SceneManager::initialize() {
     // Inicializar con la escena 0 por defecto
-    switchToScene(SCENE_0);
+    switchToScene(SCENE_8);
 }
 
 void SceneManager::cleanup() {
@@ -70,6 +71,9 @@ void SceneManager::switchToScene(SceneType scene) {
     case SCENE_7:
         currentScene = std::make_unique<Scene7>();
         break;
+    case SCENE_8:
+        currentScene = std::make_unique<Scene8>();
+        display_text = "+";
     }
 
     if (currentScene) {

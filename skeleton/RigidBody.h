@@ -21,7 +21,6 @@ public:
 
     virtual ~RigidBody();
 
-    //Actualiza la vida y se autodestruye si es necesario
     virtual void update(float t);
     virtual bool isAlive() const;
 
@@ -36,11 +35,20 @@ public:
     void setType(RigidTargetType t) { _type = t; }
     RigidTargetType getType() const { return _type; }
 
+    void markAsHit() { _is_hit = true; }
+    bool isHit() const { return _is_hit; }
+
+    void updateHitTimer(float t) { if (_is_hit) _hit_timer += t; }
+    float getHitTimer() const { return _hit_timer; }
+
 protected:
     PxRigidDynamic* _actor;
     RenderItem* _renderItem;
-    PxScene* _gScene; //Para poder borrarse a sí mismo
+    PxScene* _gScene;
     float _lifetime;
+
+    bool _is_hit = false;
+    float _hit_timer = 0.0f;
 
     RigidTargetType _type = RigidTargetType::NONE;
 };

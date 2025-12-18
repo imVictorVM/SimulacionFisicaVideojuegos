@@ -291,6 +291,7 @@
     <ClCompile Include="SolidBuoyancyForceGenerator.cpp" />
     <ClCompile Include="SolidGenerator.cpp" />
     <ClCompile Include="SolidSpringForceGenerator.cpp" />
+    <ClCompile Include="SolidWindForceGenerator.cpp" />
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="TankBall.cpp" />
     <ClCompile Include="UniformGenerator.cpp" />
@@ -341,6 +342,7 @@
     <ClInclude Include="SolidForceGenerator.h" />
     <ClInclude Include="SolidGenerator.h" />
     <ClInclude Include="SolidSpringForceGenerator.h" />
+    <ClInclude Include="SolidWindForceGenerator.h" />
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="UniformGenerator.h" />

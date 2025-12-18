@@ -2,12 +2,13 @@
 #include <vector>
 #include "core.hpp"
 #include "RenderUtils.hpp"
-enum class TargetType { NONE, RED, BLUE };
+
+enum class TargetType { NONE, RED, BLUE, BONUS };
 
 class Particle
 {
 public:
-    
+
     Particle(Vector3 Pos, Vector3 Vel, double mass = 1.0, double dmp = 0.99, double lifetime = 10.0);
     Particle(const Particle& other);
     ~Particle();
@@ -24,7 +25,7 @@ public:
     double getInverseMass() const;
     Vector3 getVelocity() const;
 
-    
+
     void setPosition(const Vector3& pos);
     void setVelocity(const Vector3& vel);
     void setLifetime(double life);
@@ -50,7 +51,7 @@ protected:
     Vector3 vel;
     Vector3 _force_accumulator;
 
-   
+
     float _mass;
     float _inverse_mass;
     float _dmp;

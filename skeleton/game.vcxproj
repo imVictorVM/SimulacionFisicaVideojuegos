@@ -288,10 +288,13 @@
     <ClCompile Include="Scene7.cpp" />
     <ClCompile Include="Scene8.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SolidBuoyancyForceGenerator.cpp" />
     <ClCompile Include="SolidGenerator.cpp" />
+    <ClCompile Include="SolidSpringForceGenerator.cpp" />
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="TankBall.cpp" />
     <ClCompile Include="UniformGenerator.cpp" />
+    <ClCompile Include="UniformSolidGenerator.cpp" />
     <ClCompile Include="WhirlwindForceGenerator.cpp" />
     <ClCompile Include="WindForceGenerator.cpp" />
   </ItemGroup>
@@ -334,11 +337,14 @@
     <ClInclude Include="Scene7.h" />
     <ClInclude Include="Scene8.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SolidBuoyancyForceGenerator.h" />
     <ClInclude Include="SolidForceGenerator.h" />
     <ClInclude Include="SolidGenerator.h" />
+    <ClInclude Include="SolidSpringForceGenerator.h" />
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="TankBall.h" />
     <ClInclude Include="UniformGenerator.h" />
+    <ClInclude Include="UniformSolidGenerator.h" />
     <ClInclude Include="WhirlwindForceGenerator.h" />
     <ClInclude Include="WindForceGenerator.h" />
   </ItemGroup>

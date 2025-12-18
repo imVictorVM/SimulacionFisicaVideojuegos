@@ -46,6 +46,9 @@
     <ClCompile Include="ExplosionSolidForceGenerator.cpp" />
     <ClCompile Include="Scene7.cpp" />
     <ClCompile Include="Scene8.cpp" />
+    <ClCompile Include="UniformSolidGenerator.cpp" />
+    <ClCompile Include="SolidSpringForceGenerator.cpp" />
+    <ClCompile Include="SolidBuoyancyForceGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -97,6 +100,9 @@
     <ClInclude Include="ExplosionSolidForceGenerator.h" />
     <ClInclude Include="Scene7.h" />
     <ClInclude Include="Scene8.h" />
+    <ClInclude Include="UniformSolidGenerator.h" />
+    <ClInclude Include="SolidSpringForceGenerator.h" />
+    <ClInclude Include="SolidBuoyancyForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

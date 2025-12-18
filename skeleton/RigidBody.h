@@ -5,6 +5,8 @@
 
 using namespace physx;
 
+enum class RigidTargetType { NONE, RED, BLUE, BONUS };
+
 class RigidBody
 {
 public:
@@ -31,9 +33,14 @@ public:
     void setColor(const Vector4& color);
     void setLifetime(float life) { _lifetime = life; }
 
+    void setType(RigidTargetType t) { _type = t; }
+    RigidTargetType getType() const { return _type; }
+
 protected:
     PxRigidDynamic* _actor;
     RenderItem* _renderItem;
     PxScene* _gScene; //Para poder borrarse a sí mismo
     float _lifetime;
+
+    RigidTargetType _type = RigidTargetType::NONE;
 };
